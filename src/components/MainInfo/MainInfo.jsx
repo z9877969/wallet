@@ -1,9 +1,10 @@
 import List from "../share/List/List"
 import Item from "../share/Item/Item"
+import css from "./MainInfo.module.css"
 
 const MainInfo = ({title, dataList}) => (
     <>
-    <h1>{title}</h1>
+    <h1 className={css.title}>{title}</h1>
     <p>RUB</p>
     <button>Add</button>
     <List>
