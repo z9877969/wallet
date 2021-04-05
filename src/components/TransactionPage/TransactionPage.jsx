@@ -8,7 +8,7 @@ class TransactionPage extends Component {
     state = {
         date: moment().format("YYYY-MM-DD"),
         time: moment().format("HH:mm"),
-        category: this.props.cardId === "costs" ? "Еда" : "Зарплата",
+        category: this.props.cardId === "costs" ? "еда" : "Зарплата",
         summ: "",
         currency: "RUB",
         comment: "",
