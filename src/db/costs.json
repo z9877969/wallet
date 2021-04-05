@@ -1,7 +1,6 @@
 {
     "mainPageList": [
         {
-            
             "name": "сегодня",
             "value": "0,00"
         },
@@ -15,5 +14,10 @@
         }
     ],
 
-    "mainPageTitle": "Расходы"
+    "mainPageTitle": "Расходы",
+
+    "categoriesList": [
+        { "id": "food", "name": "Еда" },
+        { "id": "car", "name": "Машина" }
+    ]
 }

@@ -1,7 +1,6 @@
 {
     "mainPageList": [
         {
-            
             "name": "сегодня",
             "value": "0,00"
         },
@@ -15,5 +14,10 @@
         }
     ],
 
-    "mainPageTitle": "Доходы"
+    "mainPageTitle": "Доходы",
+
+    "categoriesList": [
+        { "id": "salary", "name": "Зарплата" },
+        { "id": "prepaid", "name": "Аванс" }
+    ]
 }
