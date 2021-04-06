@@ -1,14 +1,15 @@
-const Button = ({ title, type = "button", cbOnClick }) => {
-    return (
-        <button
-            onClick={() => {
-                cbOnClick();
-            }}
-            type={type}
-        >
-            {title}
-        </button>
-    );
+const Button = ({ title, type = "button", cbOnClick, className }) => {
+  return (
+    <button
+      className={className}
+      onClick={() => {
+        cbOnClick && cbOnClick();
+      }}
+      type={type}
+    >
+      {title}
+    </button>
+  );
 };
 
 export default Button;

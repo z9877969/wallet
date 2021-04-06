@@ -1,11 +1,11 @@
-import { Children } from "react";
 import Button from "../Button/Button";
+import styles from "./Form.module.css";
 
-const Form = ({ children }) => {
+const Form = ({ children, onSubmit }) => {
   console.log(children);
   return (
-    <form>
-      <Button title={"ok"} type={"submit"} />
+    <form className={styles.container} onSubmit={onSubmit}>
+      <Button title={"ok"} type={"submit"} className={styles.btn} />
       {children}
     </form>
   );
