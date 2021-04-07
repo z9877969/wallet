@@ -3,20 +3,32 @@ import moment from 'moment';
 import Button from '../share/Button';
 import Form from '../share/Form';
 import LableInput from '../share/LableInput';
+import CategoriesList from '../CategoriesList';
+
+import costsOpts from '../../db/costs.json';
+import incomesOpts from '../../db/incomes.json';
+
+const { categoriesList: costsList } = costsOpts;
+const { categoriesList: incomesList } = incomesOpts;
 
 class TransactionPage extends Component {
   state = {
     date: moment().format('YYYY-MM-DD'),
     time: moment().format('HH:mm'),
-    category: this.props.cardId === 'costs' ? 'еда' : 'Зарплата',
+    category:
+      this.props.cardId === 'costs'
+        ? { id: 'food', name: 'Еда' }
+        : { id: 'salary', name: 'Зарплата' },
     summ: '',
     currency: 'RUB',
     comment: '',
+    isCategoriesList: false,
   };
 
   handleSubmitTransaction = e => {
+    const { isCategoriesList, ...dataForm } = this.state;
     e.preventDefault();
-    this.props.handleSubmit(this.state, this.props.cardId);
+    this.props.handleSubmit(dataForm, this.props.cardId);
   };
 
   handleChange = e => {
@@ -25,11 +37,31 @@ class TransactionPage extends Component {
     this.setState({ [name]: value });
   };
 
+  openCategoriesList = () => {
+    this.setState({
+      isCategoriesList: true,
+    });
+  };
+
+  onSetCategory = opts => {
+    this.setState({
+      category: opts,
+    });
+  };
+
   render() {
     const { title, handleToggleCard } = this.props;
-    const { date, time, category, summ, currency, comment } = this.state;
+    const {
+      date,
+      time,
+      category,
+      summ,
+      currency,
+      comment,
+      isCategoriesList,
+    } = this.state;
 
-    return (
+    return !isCategoriesList ? (
       <>
         <Button cbOnClick={handleToggleCard} title={'Go back'} />
         <h1>{title}</h1>
@@ -52,8 +84,9 @@ class TransactionPage extends Component {
             title="Категории"
             type="button"
             name="category"
-            value={category}
-            handleChange={this.handleChange}
+            value={category.name}
+            // handleChange={this.handleChange}
+            handleClick={this.openCategoriesList}
           />
           <LableInput
             title="Сумма"
@@ -80,6 +113,11 @@ class TransactionPage extends Component {
           />
         </Form>
       </>
+    ) : (
+      <CategoriesList
+        onCategoryClick={this.onSetCategory}
+        categoriesList={this.props.cardId === 'costs' ? costsList : incomesList}
+      />
     );
   }
 }
