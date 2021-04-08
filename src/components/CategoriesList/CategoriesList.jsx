@@ -1,13 +1,22 @@
-const CategoriesList = ({ categoriesList, onCategoryClick }) => {
+import style from './CategoriesList.module.css';
+
+const CategoriesList = ({ categoriesList, onCategoryClick, handleGoBack }) => {
   return (
     <section>
-      <button>go back</button>
+      <button type="button" onClick={handleGoBack}>
+        go back
+      </button>
       <h2>Categories</h2>;
       <ul>
         {categoriesList.map(({ id, name }) => {
           return (
             <li key={id}>
-              <span onClick={() => onCategoryClick({ id, name })}>{name}</span>
+              <span
+                className={style.item}
+                onClick={() => onCategoryClick({ id, name })}
+              >
+                {name}
+              </span>
               <button>...</button>
             </li>
           );
