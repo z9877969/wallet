@@ -47,6 +47,10 @@ class TransactionPage extends Component {
     this.setState({
       category: opts,
     });
+    this.handleGoBack();
+  };
+  handleGoBack = () => {
+    this.setState({ isCategoriesList: false });
   };
 
   render() {
@@ -115,6 +119,7 @@ class TransactionPage extends Component {
       </>
     ) : (
       <CategoriesList
+        handleGoBack={this.handleGoBack}
         onCategoryClick={this.onSetCategory}
         categoriesList={this.props.cardId === 'costs' ? costsList : incomesList}
       />

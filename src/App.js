@@ -12,7 +12,7 @@ class App extends Component {
   };
 
   componentDidMount() {
-    console.log('cdu');
+    console.log('cdm');
 
     const costs = JSON.parse(localStorage.getItem('costs'));
 
@@ -22,7 +22,15 @@ class App extends Component {
       incomes: incomes ? incomes : [],
     });
   }
-
+  componentDidUpdate(prevProps, prevState) {
+    console.log('cdu');
+    if (prevState.costs !== this.state.costs) {
+      localStorage.setItem('costs', JSON.stringify(this.state.costs));
+    }
+    if (prevState.incomes !== this.state.incomes) {
+      localStorage.setItem('incomes', JSON.stringify(this.state.incomes));
+    }
+  }
   handleSubmit = (data, cardId) => {
     console.log(data, cardId);
 
@@ -39,7 +47,7 @@ class App extends Component {
   };
 
   render() {
-    console.log(this.state);
+    console.log('render');
     return (
       <>
         {this.state.activeCard === '' && (
