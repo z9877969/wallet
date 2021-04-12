@@ -29,6 +29,7 @@ class TransactionPage extends Component {
     const { isCategoriesList, ...dataForm } = this.state;
     e.preventDefault();
     this.props.handleSubmit(dataForm, this.props.cardId);
+    this.props.handleToggleCard()
   };
 
   handleChange = e => {
