@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Route, Switch } from 'react-router';
 import MainPage from './components/MainPage';
 import TransactionPage from './components/TransactionPage';
 import costsDb from './db/costs.json';
@@ -9,7 +10,6 @@ class App extends Component {
     activeCard: '',
     costs: [],
     incomes: [],
-    n: 0,
   };
 
   componentDidMount() {
@@ -49,41 +49,52 @@ class App extends Component {
   };
 
   render() {
-    const { costs, incomes, n } = this.state;
-    console.log('n', n);
+    const { costs, incomes } = this.state;
     return (
       <>
-        <button onClick={() => this.setState(({ n }) => ({ n: n + 1 }))}>
-          click
-        </button>
-        {this.state.activeCard === '' && (
-          <MainPage
-            n={n}
-            costs={costs}
-            incomes={incomes}
-            costsDb={costsDb}
-            incomesDb={incomesDb}
-            handleToggleCard={this.handleToggleCard}
-            costs={this.state.costs}
-            incomes={this.state.incomes}
+        <Switch>
+          <Route
+            path="/"
+            exact
+            render={roterProps => (
+              <MainPage
+                {...roterProps}
+                costs={costs}
+                incomes={incomes}
+                costsDb={costsDb}
+                incomesDb={incomesDb}
+                handleToggleCard={this.handleToggleCard}
+                costs={this.state.costs}
+                incomes={this.state.incomes}
+              />
+            )}
           />
-        )}
-        {this.state.activeCard === 'costs' && (
-          <TransactionPage
-            title={'Расходы'}
-            handleToggleCard={this.handleToggleCard}
-            handleSubmit={this.handleSubmit}
-            cardId="costs"
+          <Route
+            path="/costs"
+            render={props => (
+              <TransactionPage
+                {...props}
+                title={'Расходы'}
+                handleToggleCard={this.handleToggleCard}
+                handleSubmit={this.handleSubmit}
+                cardId="costs"
+              />
+            )}
           />
-        )}
-        {this.state.activeCard === 'incomes' && (
-          <TransactionPage
-            title={'Доходы'}
-            handleToggleCard={this.handleToggleCard}
-            handleSubmit={this.handleSubmit}
-            cardId="incomes"
+          <Route
+            path="/incomes"
+            render={props => (
+              <TransactionPage
+                {...props}
+                title={'Доходы'}
+                handleToggleCard={this.handleToggleCard}
+                handleSubmit={this.handleSubmit}
+                cardId="incomes"
+              />
+            )}
           />
-        )}
+          <Route />
+        </Switch>
       </>
     );
   }

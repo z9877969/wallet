@@ -41,23 +41,19 @@ const MainPage = props => {
     <>
       <h1>Журнал рассходов</h1>
       <MainInfo
-        n={n}
         title={costsDb.mainPageTitle}
         dataList={costsDb.mainPageList}
         summsOfPeriod={getTransactionList(costs)}
         cardId="costs"
         handleToggleCard={handleToggleCard}
-        // foo={() => foo(2)}
       />
 
       <MainInfo
-        n={n}
         title={incomesDb.mainPageTitle}
         dataList={incomesDb.mainPageList}
         summsOfPeriod={getTransactionList(incomes)}
         cardId="incomes"
         handleToggleCard={handleToggleCard}
-        // foo={() => foo(2)}
       />
 
       <MainInfo title={'Баланс'} dataList={balance} />

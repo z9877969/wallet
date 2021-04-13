@@ -7,6 +7,7 @@ import CategoriesList from '../CategoriesList';
 
 import costsOpts from '../../db/costs.json';
 import incomesOpts from '../../db/incomes.json';
+import { Route } from 'react-router';
 
 const { categoriesList: costsList } = costsOpts;
 const { categoriesList: incomesList } = incomesOpts;
@@ -29,7 +30,7 @@ class TransactionPage extends Component {
     const { isCategoriesList, ...dataForm } = this.state;
     e.preventDefault();
     this.props.handleSubmit(dataForm, this.props.cardId);
-    this.props.handleToggleCard()
+    this.handleGoToHome();
   };
 
   handleChange = e => {
@@ -39,9 +40,12 @@ class TransactionPage extends Component {
   };
 
   openCategoriesList = () => {
-    this.setState({
-      isCategoriesList: true,
-    });
+    const { history, location } = this.props;
+    const baseLocation = {
+      pathname: `${location.pathname}/category`,
+      state: location
+    }
+    history.push(baseLocation);
   };
 
   onSetCategory = opts => {
@@ -50,12 +54,18 @@ class TransactionPage extends Component {
     });
     this.handleGoBack();
   };
+
   handleGoBack = () => {
-    this.setState({ isCategoriesList: false });
+    this.props.history.push(this.props.location.state)
+    console.log('this.props.location :>> ', this.props.location.state);
+  };
+
+  handleGoToHome = () => {
+    this.props.history.push('/');
   };
 
   render() {
-    const { title, handleToggleCard } = this.props;
+    const { title, handleToggleCard, cardId } = this.props;
     const {
       date,
       time,
@@ -66,64 +76,77 @@ class TransactionPage extends Component {
       isCategoriesList,
     } = this.state;
 
-    return !isCategoriesList ? (
+    console.log('this.props.location.pathname :>> ', cardId);
+
+    return (
       <>
-        <Button cbOnClick={handleToggleCard} title={'Go back'} />
-        <h1>{title}</h1>
-        <Form onSubmit={this.handleSubmitTransaction}>
-          <LableInput
-            title="День"
-            type="date"
-            name="date"
-            value={date}
-            handleChange={this.handleChange}
-          />
-          <LableInput
-            title="Время"
-            type="time"
-            name="time"
-            value={time}
-            handleChange={this.handleChange}
-          />
-          <LableInput
-            title="Категории"
-            type="button"
-            name="category"
-            value={category.name}
-            // handleChange={this.handleChange}
-            handleClick={this.openCategoriesList}
-          />
-          <LableInput
-            title="Сумма"
-            type="text"
-            name="summ"
-            value={summ}
-            handleChange={this.handleChange}
-            placeholder="Введите сумму"
-          />
-          <LableInput
-            title="Валюта"
-            type="button"
-            name="currency"
-            value={currency}
-            handleChange={this.handleChange}
-          />
-          <LableInput
-            title="Комментарий"
-            type="text"
-            name="comment"
-            value={comment}
-            handleChange={this.handleChange}
-            placeholder="Комментарий"
-          />
-        </Form>
+        {this.props.location.pathname === `/${cardId}` && (
+          <>
+            <Button cbOnClick={this.handleGoToHome} title={'Go back'} />
+            <h1>{title}</h1>
+            <Form onSubmit={this.handleSubmitTransaction}>
+              <LableInput
+                title="День"
+                type="date"
+                name="date"
+                value={date}
+                handleChange={this.handleChange}
+              />
+              <LableInput
+                title="Время"
+                type="time"
+                name="time"
+                value={time}
+                handleChange={this.handleChange}
+              />
+              <LableInput
+                title="Категории"
+                type="button"
+                name="category"
+                value={category.name}
+                // handleChange={this.handleChange}
+                handleClick={this.openCategoriesList}
+              />
+              <LableInput
+                title="Сумма"
+                type="text"
+                name="summ"
+                value={summ}
+                handleChange={this.handleChange}
+                placeholder="Введите сумму"
+              />
+              <LableInput
+                title="Валюта"
+                type="button"
+                name="currency"
+                value={currency}
+                handleChange={this.handleChange}
+              />
+              <LableInput
+                title="Комментарий"
+                type="text"
+                name="comment"
+                value={comment}
+                handleChange={this.handleChange}
+                placeholder="Комментарий"
+              />
+            </Form>
+          </>
+        )}
+        <Route
+          path={`${this.props.match.url}/category`}
+          render={props => (
+            <CategoriesList
+              {...props}
+              handleGoBack={this.handleGoBack}
+              onCategoryClick={this.onSetCategory}
+              categoriesList={
+                this.props.cardId === 'costs' ? costsList : incomesList
+              }
+            />
+          )}
+        />
       </>
-    ) : (
-      <CategoriesList
-        handleGoBack={this.handleGoBack}
-        onCategoryClick={this.onSetCategory}
-        categoriesList={this.props.cardId === 'costs' ? costsList : incomesList}
-      />
     );
   }
 }
