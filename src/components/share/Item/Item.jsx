@@ -1,7 +1,10 @@
-const Item = ({children}) => (
-    <li>
-        {children}
-    </li>
-)
+import { memo } from 'react';
 
-export default Item
+const Item = ({ children, onClick }) => (
+  <li>
+    {console.log('object')}
+    {children}
+  </li>
+);
+
+export default Item;

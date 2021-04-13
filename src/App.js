@@ -9,6 +9,7 @@ class App extends Component {
     activeCard: '',
     costs: [],
     incomes: [],
+    n: 0,
   };
 
   componentDidMount() {
@@ -39,6 +40,7 @@ class App extends Component {
         console.log(prevState[cardId]);
         return { [cardId]: [...prevState[cardId], data] };
       });
+      this.handleToggleCard();
     }
   };
 
@@ -47,11 +49,18 @@ class App extends Component {
   };
 
   render() {
-    console.log('render');
+    const { costs, incomes, n } = this.state;
+    console.log('n', n);
     return (
       <>
+        <button onClick={() => this.setState(({ n }) => ({ n: n + 1 }))}>
+          click
+        </button>
         {this.state.activeCard === '' && (
           <MainPage
+            n={n}
+            costs={costs}
+            incomes={incomes}
             costsDb={costsDb}
             incomesDb={incomesDb}
             handleToggleCard={this.handleToggleCard}
