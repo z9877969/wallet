@@ -64,6 +64,8 @@ class App extends Component {
             costsDb={costsDb}
             incomesDb={incomesDb}
             handleToggleCard={this.handleToggleCard}
+            costs={this.state.costs}
+            incomes={this.state.incomes}
           />
         )}
         {this.state.activeCard === 'costs' && (
