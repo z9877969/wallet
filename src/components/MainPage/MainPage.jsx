@@ -1,41 +1,59 @@
-import moment from "moment"
+import { useHistory } from 'react-router-dom';
+import moment from 'moment';
 import MainInfo from '../MainInfo';
 import Button from '../share/Button';
 
 const balance = [{ name: 'Все время', value: '0,00' }];
 const MainPage = props => {
   const { costsDb, incomesDb, handleToggleCard, costs, incomes } = props;
-  const currentDate = moment().format('YYYY-MM-DD')
-  const currentWeek = moment(currentDate).week()
-  const currentYear = moment(currentDate).year()
-  const currentMonth = moment(currentDate).month()
+  const history = useHistory();
+  const currentDate = moment().format('YYYY-MM-DD');
+  const currentWeek = moment(currentDate).week();
+  const currentYear = moment(currentDate).year();
+  const currentMonth = moment(currentDate).month();
 
-  
-  const getTransactionList = (data) => {
-    const today = data.filter(elem => elem.date === currentDate)
-    const week = data.filter(elem => moment(elem.date).week() === currentWeek && moment(elem.date).year() === currentYear )
-    const month = data.filter(elem => moment(elem.date).month() === currentMonth && moment(elem.date).year() === currentYear)
+  const getTransactionList = data => {
+    const today = data.filter(elem => elem.date === currentDate);
+    const week = data.filter(
+      elem =>
+        moment(elem.date).week() === currentWeek &&
+        moment(elem.date).year() === currentYear,
+    );
+    const month = data.filter(
+      elem =>
+        moment(elem.date).month() === currentMonth &&
+        moment(elem.date).year() === currentYear,
+    );
 
     const getSummProp = (propName, data) => {
       return data.reduce((acc, el) => {
-      if (!acc.name) {
-        acc.name = propName
-         acc.value = Number(el.summ)
-        return acc
-      } 
+        if (!acc.name) {
+          acc.name = propName;
+          acc.value = Number(el.summ);
+          return acc;
+        }
 
-        acc.value += Number(el.summ)
-        
-      return acc
-      }, {})
-    }
+        acc.value += Number(el.summ);
 
-    return [getSummProp("сегодня", today),getSummProp("неделя", week),getSummProp("месяц", month)]
-  }
+        return acc;
+      }, {});
+    };
 
-  getTransactionList(costs)
+    return [
+      getSummProp('сегодня', today),
+      getSummProp('неделя', week),
+      getSummProp('месяц', month),
+    ];
+  };
 
-  console.log(getTransactionList(costs))
+  getTransactionList(costs);
+  const handlerOpenCosts = () => {
+    console.log("handlerOpenCosts");
+    history.push('/categories/costs')
+  };
+  const handlerOpenIncomes = () => history.push('/categories/incomes');
+
+  console.log(getTransactionList(costs));
 
   return (
     <>
@@ -57,9 +75,9 @@ const MainPage = props => {
       />
 
       <MainInfo title={'Баланс'} dataList={balance} />
-      
-      <Button title={'Все расходы'} />
-      <Button title={'Все доходы'} />
+
+      <Button title={'Все расходы'} cbOnClick={handlerOpenCosts} />
+      <Button title={'Все доходы'} cbOnClick={handlerOpenIncomes} />
     </>
   );
 };

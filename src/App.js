@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Route, Switch } from 'react-router';
 import MainPage from './components/MainPage';
 import TransactionPage from './components/TransactionPage';
+import PageCategoriesForPeriod from './pages/pageCategoriesForPeriod';
+import PageTransactionsList from './pages/pageTransactionsList';
 import costsDb from './db/costs.json';
 import incomesDb from './db/incomes.json';
 
@@ -93,7 +95,19 @@ class App extends Component {
               />
             )}
           />
-          <Route />
+          <Route
+            path="/categories/:category/list"
+            render={() => (
+              <PageTransactionsList costs={costs} incomes={incomes} />
+            )}
+          />
+          {/* <Route path="/categories/:category" component={PageCategoriesForPeriod}/> */}
+          <Route
+            path="/categories/:category"
+            render={() => (
+              <PageCategoriesForPeriod costs={costs} incomes={incomes} />
+            )}
+          />
         </Switch>
       </>
     );
