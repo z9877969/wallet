@@ -1,5 +1,7 @@
 import { Component } from 'react';
 import moment from 'moment';
+import { Route } from 'react-router';
+import { connect } from 'react-redux';
 import Button from '../share/Button';
 import Form from '../share/Form';
 import LableInput from '../share/LableInput';
@@ -7,7 +9,11 @@ import CategoriesList from '../CategoriesList';
 
 import costsOpts from '../../db/costs.json';
 import incomesOpts from '../../db/incomes.json';
-import { Route } from 'react-router';
+
+import {
+  addIncomes,
+  addCosts,
+} from '../../redux/transactions/transactionsAction';
 
 const { categoriesList: costsList } = costsOpts;
 const { categoriesList: incomesList } = incomesOpts;
@@ -17,9 +23,9 @@ class TransactionPage extends Component {
     date: moment().format('YYYY-MM-DD'),
     time: moment().format('HH:mm'),
     category:
-      this.props.cardId === 'costs'
-        ? { id: 'food', name: 'Еда' }
-        : { id: 'salary', name: 'Зарплата' },
+    this.props.match.url.slice(1) === 'costs'
+      ? { id: 'food', name: 'Еда' }
+      : { id: 'salary', name: 'Зарплата' },
     summ: '',
     currency: 'RUB',
     comment: '',
@@ -27,9 +33,13 @@ class TransactionPage extends Component {
   };
 
   handleSubmitTransaction = e => {
+    const { match, addCosts, addIncomes } = this.props;
     const { isCategoriesList, ...dataForm } = this.state;
+    const cardId = match.url.slice(1);
     e.preventDefault();
-    this.props.handleSubmit(dataForm, this.props.cardId);
+    cardId === 'incomes' && addIncomes(dataForm);
+    cardId === 'costs' && addCosts(dataForm);
+
     this.handleGoToHome();
   };
 
@@ -43,8 +53,8 @@ class TransactionPage extends Component {
     const { history, location } = this.props;
     const baseLocation = {
       pathname: `${location.pathname}/category`,
-      state: location
-    }
+      state: location,
+    };
     history.push(baseLocation);
   };
 
@@ -56,8 +66,7 @@ class TransactionPage extends Component {
   };
 
   handleGoBack = () => {
-    this.props.history.push(this.props.location.state)
-    console.log('this.props.location :>> ', this.props.location.state);
+    this.props.history.push(this.props.location.state);
   };
 
   handleGoToHome = () => {
@@ -65,7 +74,8 @@ class TransactionPage extends Component {
   };
 
   render() {
-    const { title, handleToggleCard, cardId } = this.props;
+    const { title, match } = this.props;
+    const cardId = match.url.slice(1);
     const {
       date,
       time,
@@ -75,8 +85,6 @@ class TransactionPage extends Component {
       comment,
       isCategoriesList,
     } = this.state;
-
-    console.log('this.props.location.pathname :>> ', cardId);
 
     return (
       <>
@@ -151,4 +159,23 @@ class TransactionPage extends Component {
   }
 }
 
-export default TransactionPage;
+// const mapStateToProps = store => ({
+//   incomes: store.transactions.incomes,
+// });
+
+// const mapDispatchToProps = dispatch => ({
+//   addIncomes(data) {
+//     return dispatch(addIncomes(data));
+//   },
+// });
+
+const mapDispatchToProps = {
+  addIncomes,
+  addCosts,
+};
+
+// this.props.incomes
+
+export default connect(null, mapDispatchToProps)(TransactionPage);
+
+// const con = (mSTP, mDTP) => (component) => "UpdateComponent"

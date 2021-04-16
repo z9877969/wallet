@@ -1,11 +1,13 @@
 import { useHistory } from 'react-router-dom';
 import moment from 'moment';
+import { connect } from 'react-redux';
 import MainInfo from '../MainInfo';
 import Button from '../share/Button';
 
 const balance = [{ name: 'Все время', value: '0,00' }];
 const MainPage = props => {
   const { costsDb, incomesDb, handleToggleCard, costs, incomes } = props;
+  
   const history = useHistory();
   const currentDate = moment().format('YYYY-MM-DD');
   const currentWeek = moment(currentDate).week();
@@ -48,8 +50,8 @@ const MainPage = props => {
 
   getTransactionList(costs);
   const handlerOpenCosts = () => {
-    console.log("handlerOpenCosts");
-    history.push('/categories/costs')
+    console.log('handlerOpenCosts');
+    history.push('/categories/costs');
   };
   const handlerOpenIncomes = () => history.push('/categories/incomes');
 
@@ -82,4 +84,9 @@ const MainPage = props => {
   );
 };
 
-export default MainPage;
+const mapStateToProps = state => ({
+  incomes: state.transactions.incomes,
+  costs: state.transactions.costs,
+});
+
+export default connect(mapStateToProps)(MainPage);
