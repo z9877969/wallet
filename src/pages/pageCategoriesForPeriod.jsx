@@ -1,47 +1,29 @@
-import { Component } from 'react';
-import {
-  useHistory,
-  useLocation,
-  useRouteMatch,
-  withRouter,
-} from 'react-router-dom';
+import { connect } from 'react-redux';
+import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 
 import Button from '../components/share/Button';
 import Item from '../components/share/Item';
 import List from '../components/share/List';
 
-const PageCategoriesForPeriod = (
-  props,
-  // { costs, incomes }
-) => {
+import { addTransactionListId } from '../redux/transactions/transactionsAction';
+
+const PageCategoriesForPeriod = props => {
   const match = useRouteMatch();
   const location = useLocation();
   const history = useHistory();
 
   const { category } = match.params;
 
-  //   let data = [];
-  //   switch (category) {
-  //     case 'costs':
-  //       data = [...costs];
-  //       break;
-  //     case 'incomes':
-  //       data = [...incomes];
-  //       break;
-  //   }
-
-  //   const data =
-  //     category === 'costs' ? costs : category === 'incomes' ? incomes : [];
-
   const data = props[category] || [];
 
-  const handleOpenList = () => {
+  const handleOpenList = id => {
     history.push({
       pathname: `${match.url}/list`,
       state: {
         from: location,
       },
     });
+    props.addTransactionListId(id);
   };
 
   const handleGoBack = () => history.push('/');
@@ -51,10 +33,14 @@ const PageCategoriesForPeriod = (
       <h1>PageCategoriesForPeriod</h1>
       <Button title="GoBack" cbOnClick={handleGoBack} />
       <List>
-        {data.map(({ category: { name }, summ }) => (
+        {data.map(({ category: { name, id }, summ }) => (
           <Item>
             <span>{name}</span> <span>{summ}</span>
-            <Button title="show list" cbOnClick={handleOpenList} />
+            <Button
+              title="show list"
+              cbOnClick={handleOpenList}
+              cbArgs={[id]}
+            />
           </Item>
         ))}
       </List>
@@ -62,4 +48,16 @@ const PageCategoriesForPeriod = (
   );
 };
 
-export default PageCategoriesForPeriod;
+const mapStateToProps = state => ({
+  incomes: state.transactions.incomes,
+  costs: state.transactions.costs,
+});
+
+const mapDispatchToProps = {
+  addTransactionListId,
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(PageCategoriesForPeriod);

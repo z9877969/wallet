@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import {ActionType} from './transactionsAction';
+import { ActionType } from './transactionsAction';
 
 const setToLS = (key, data) => localStorage.setItem(key, JSON.stringify(data));
 const getFromLS = key => JSON.parse(localStorage.getItem(key)) || [];
@@ -31,9 +31,21 @@ const incomesReducer = (state = initialState.incomes, { type, payload }) => {
   }
 };
 
+const transactionListIdReducer = (state = '', { type, payload }) => {
+  switch (type) {
+    case ActionType.ADD_TRANSACTION_LIST_ID:
+      return payload;
+    case ActionType.REMOVE_TRANSACTION_LIST_ID:
+      return '';
+    default:
+      return state;
+  }
+};
+
 const transactionsReducer = combineReducers({
   incomes: incomesReducer,
   costs: costsReducer,
+  listId: transactionListIdReducer
 });
 
 export default transactionsReducer;

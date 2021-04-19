@@ -1,9 +1,15 @@
-const Button = ({ title, type = "button", cbOnClick, className }) => {
+const Button = ({
+  title,
+  type = 'button',
+  cbOnClick,
+  className,
+  cbArgs = [],
+}) => {
   return (
     <button
       className={className}
       onClick={() => {
-        cbOnClick && cbOnClick();
+        cbOnClick && cbOnClick(...cbArgs);
       }}
       type={type}
     >
