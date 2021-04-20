@@ -2,11 +2,12 @@ import { combineReducers } from 'redux';
 import { ActionType } from './transactionsAction';
 
 const setToLS = (key, data) => localStorage.setItem(key, JSON.stringify(data));
-const getFromLS = key => JSON.parse(localStorage.getItem(key)) || [];
+const getFromLS = (key, initial) => JSON.parse(localStorage.getItem(key)) || initial;
 
 const initialState = {
-  costs: getFromLS('costs'),
-  incomes: getFromLS('incomes'),
+  costs: getFromLS('costs', []),
+  incomes: getFromLS('incomes', []),
+  listId: getFromLS('listId', ""),
 };
 
 const costsReducer = (state = initialState.costs, { type, payload }) => {
@@ -31,11 +32,16 @@ const incomesReducer = (state = initialState.incomes, { type, payload }) => {
   }
 };
 
-const transactionListIdReducer = (state = '', { type, payload }) => {
+const transactionListIdReducer = (
+  state = initialState.listId,
+  { type, payload },
+) => {
   switch (type) {
     case ActionType.ADD_TRANSACTION_LIST_ID:
+      setToLS('listId', payload);
       return payload;
     case ActionType.REMOVE_TRANSACTION_LIST_ID:
+      setToLS('listId', payload);
       return '';
     default:
       return state;
@@ -45,7 +51,7 @@ const transactionListIdReducer = (state = '', { type, payload }) => {
 const transactionsReducer = combineReducers({
   incomes: incomesReducer,
   costs: costsReducer,
-  listId: transactionListIdReducer
+  listId: transactionListIdReducer,
 });
 
 export default transactionsReducer;

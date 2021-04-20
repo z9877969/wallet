@@ -18,6 +18,7 @@
 
     "categoriesList": [
         { "id": "food", "name": "Еда" },
-        { "id": "car", "name": "Машина" }
+        { "id": "car", "name": "Машина" },
+        { "id": "farmacy", "name": "Аптека" }
     ]
 }

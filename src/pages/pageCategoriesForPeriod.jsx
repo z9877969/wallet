@@ -6,6 +6,7 @@ import Item from '../components/share/Item';
 import List from '../components/share/List';
 
 import { addTransactionListId } from '../redux/transactions/transactionsAction';
+import help from '../utils/helpers';
 
 const PageCategoriesForPeriod = props => {
   const match = useRouteMatch();
@@ -13,8 +14,8 @@ const PageCategoriesForPeriod = props => {
   const history = useHistory();
 
   const { category } = match.params;
-
   const data = props[category] || [];
+  const dataByCategories = help.getDataByCategories(data);
 
   const handleOpenList = id => {
     history.push({
@@ -33,8 +34,8 @@ const PageCategoriesForPeriod = props => {
       <h1>PageCategoriesForPeriod</h1>
       <Button title="GoBack" cbOnClick={handleGoBack} />
       <List>
-        {data.map(({ category: { name, id }, summ }) => (
-          <Item>
+        {dataByCategories.map(({ name, id, summ }) => (
+          <Item key={id}>
             <span>{name}</span> <span>{summ}</span>
             <Button
               title="show list"

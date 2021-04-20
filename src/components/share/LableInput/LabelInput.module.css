@@ -1,0 +1,9 @@
+.label {
+    display: flex;
+    justify-content: space-between;
+}
+
+.label input,
+.label button {
+    width: 60%;
+}

@@ -1,0 +1,9 @@
+.item {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.item.col:not(:last-child) {
+    margin-bottom: 1rem;
+}   

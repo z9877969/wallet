@@ -1,3 +1,5 @@
+import css from './Button.module.css';
+
 const Button = ({
   title,
   type = 'button',
@@ -7,7 +9,7 @@ const Button = ({
 }) => {
   return (
     <button
-      className={className}
+      className={`${className} ${css.btn}`}
       onClick={() => {
         cbOnClick && cbOnClick(...cbArgs);
       }}

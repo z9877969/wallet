@@ -1,3 +1,5 @@
+import css from './LabelInput.module.css';
+
 const LableInput = ({
   title,
   type = 'text',
@@ -8,7 +10,7 @@ const LableInput = ({
   handleClick,
 }) => {
   return (
-    <label>
+    <label className={css.label}>
       {title}
       {!handleClick ? (
         <input

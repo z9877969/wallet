@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Route, Switch } from 'react-router';
-import MainPage from './components/MainPage';
-import TransactionPage from './components/TransactionPage';
+import MainPage from './pages/MainPage';
+import TransactionPage from './pages/TransactionPage';
 import PageCategoriesForPeriod from './pages/pageCategoriesForPeriod';
 import PageTransactionsList from './pages/pageTransactionsList';
 import costsDb from './db/costs.json';
@@ -29,8 +29,6 @@ class App extends Component {
             render={roterProps => (
               <MainPage
                 {...roterProps}
-                // costs={costs}
-                // incomes={incomes}
                 costsDb={costsDb}
                 incomesDb={incomesDb}
                 handleToggleCard={this.handleToggleCard}

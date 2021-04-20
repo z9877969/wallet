@@ -1,16 +1,13 @@
 import { useHistory } from 'react-router-dom';
 import List from '../share/List';
 import Item from '../share/Item';
-import css from './MainInfo.module.css';
+import Button from '../share/Button';
+import Section from '../share/Section/Section';
+import Container from '../share/Container/Container';
 
-const MainInfo = ({
-  title,
-  dataList,
-  cardId = '',
-  // handleToggleCard,
-  summsOfPeriod,
-}) => {
-  
+import help from '../../utils/helpers';
+
+const MainInfo = ({ title, cardId = '', summsOfPeriod }) => {
   const abracadabra = useHistory();
 
   const handleToggleCard = () => {
@@ -18,27 +15,22 @@ const MainInfo = ({
     abracadabra.push(pathname);
   };
   return (
-    <>
-      <h1 className={css.title}>{title}</h1>
-      <p>RUB</p>
-      <button
-        onClick={() => {
-          handleToggleCard(cardId);
-        }}
-      >
-        Add
-      </button>
-      {summsOfPeriod && (
-        <List>
-          {summsOfPeriod.map(({ name, value }) => (
-            <Item key={name}>
-              <span>{name}</span>
-              <span>{value}</span>
-            </Item>
-          ))}
-        </List>
-      )}
-    </>
+    <Section title={title}>
+      <Container>
+        <p>RUB</p>
+        <Button title="Add" cbOnClick={handleToggleCard} cbArgs={[cardId]} />
+        {summsOfPeriod && (
+          <List>
+            {summsOfPeriod.map(({ name, value }) => (
+              <Item key={name || help.generateId()}>
+                <span>{name}</span>
+                <span>{value}</span>
+              </Item>
+            ))}
+          </List>
+        )}
+      </Container>
+    </Section>
   );
 };
 
