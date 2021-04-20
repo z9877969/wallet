@@ -1,52 +1,43 @@
-import { combineReducers } from 'redux';
-import { ActionType } from './transactionsAction';
+import { createReducer, combineReducers } from '@reduxjs/toolkit';
+import {
+  addCostsSuccess,
+  addIncomesSuccess,
+  addTransactionListId,
+  getCostsSuccess,
+  getIncomesSuccess,
+  removeTransactionListId,
+} from './transactionsAction';
 
 const setToLS = (key, data) => localStorage.setItem(key, JSON.stringify(data));
-const getFromLS = (key, initial) => JSON.parse(localStorage.getItem(key)) || initial;
+const getFromLS = (key, initial) =>
+  JSON.parse(localStorage.getItem(key)) || initial;
 
 const initialState = {
-  costs: getFromLS('costs', []),
-  incomes: getFromLS('incomes', []),
-  listId: getFromLS('listId', ""),
+  costs: [],
+  incomes: [],
+  listId: getFromLS('listId', ''),
 };
 
-const costsReducer = (state = initialState.costs, { type, payload }) => {
-  switch (type) {
-    case ActionType.ADD_COSTS:
-      const newState = [...state, payload];
-      setToLS('costs', newState);
-      return newState;
-    default:
-      return state;
-  }
-};
+const costsReducer = createReducer(initialState.costs, {
+  [addCostsSuccess]: (state, { payload }) => [...state, payload],
+  [getCostsSuccess]: (_, { payload }) => [...payload],
+});
 
-const incomesReducer = (state = initialState.incomes, { type, payload }) => {
-  switch (type) {
-    case ActionType.ADD_INCOMES:
-      const newState = [...state, payload];
-      setToLS('incomes', newState);
-      return newState;
-    default:
-      return state;
-  }
-};
+const incomesReducer = createReducer(initialState.incomes, {
+  [addIncomesSuccess]: (state, { payload }) => [...state, payload],
+  [getIncomesSuccess]: (_, { payload }) => [...payload],
+});
 
-const transactionListIdReducer = (
-  state = initialState.listId,
-  { type, payload },
-) => {
-  switch (type) {
-    case ActionType.ADD_TRANSACTION_LIST_ID:
-      setToLS('listId', payload);
-      return payload;
-    case ActionType.REMOVE_TRANSACTION_LIST_ID:
-      setToLS('listId', payload);
-      return '';
-    default:
-      return state;
-  }
-};
+const transactionListIdReducer = createReducer(initialState.listId, {
+  [addTransactionListId]: (_, { payload }) => {
+    setToLS('listId', payload);
+    return payload;
+  },
+  [removeTransactionListId]: () => {
+    setToLS('listId', '');
+    return initialState.listId;
+  },
+});
 
 const transactionsReducer = combineReducers({
   incomes: incomesReducer,

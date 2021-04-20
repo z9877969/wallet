@@ -12,7 +12,7 @@ import Container from '../components/share/Container/Container';
 import costsOpts from '../db/costs.json';
 import incomesOpts from '../db/incomes.json';
 
-import { addIncomes, addCosts } from '../redux/transactions/transactionsAction';
+import { addCosts, addIncomes } from '../redux/transactions/transactionsOperations';
 
 const { categoriesList: costsList } = costsOpts;
 const { categoriesList: incomesList } = incomesOpts;

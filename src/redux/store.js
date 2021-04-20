@@ -1,7 +1,10 @@
-import { createStore } from 'redux';
-import rootReducer from './rootReducer';
+import { configureStore } from '@reduxjs/toolkit';
+import transactions from './transactions/transactionsReducer';
+import error from './errorReducer';
 
-// const rootReducer = (state = {arr: []}, action) => state;
-
-
-export default createStore(rootReducer, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__())
+export default configureStore({
+  reducer: {
+    transactions,
+    error,
+  },
+});
