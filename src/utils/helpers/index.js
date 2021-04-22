@@ -1,11 +1,11 @@
 import getDataByCategories from './getDataByCategories';
 import generateId from './genarateId';
-import getTransactionPeriodsList from './getTransactionPeriodsList';
+import getPeriodsSumms from './getPeriodsSumms';
 
 const ed = {
   getDataByCategories,
   generateId,
-  getTransactionPeriodsList,
+  getPeriodsSumms,
 };
 
 export default ed;

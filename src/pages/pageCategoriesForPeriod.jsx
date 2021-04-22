@@ -31,7 +31,7 @@ const PageCategoriesForPeriod = props => {
 
   return (
     <>
-      <h1>PageCategoriesForPeriod</h1>
+    
       <Button title="GoBack" cbOnClick={handleGoBack} />
       <List>
         {dataByCategories.map(({ name, id, summ }) => (

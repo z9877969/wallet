@@ -1,14 +1,20 @@
 import { useHistory } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import List from '../share/List';
 import Item from '../share/Item';
 import Button from '../share/Button';
 import Section from '../share/Section/Section';
 import Container from '../share/Container/Container';
-
+import setsPeriodsList from '../../db/tmp/mainInfoList.json';
 import help from '../../utils/helpers';
+import css from './MainInfo.module.css';
 
-const MainInfo = ({ title, cardId = '', summsOfPeriod }) => {
+const MainInfo = ({ title, cardId }) => {
   const abracadabra = useHistory();
+  const transactions = useSelector(state => state.transactions);
+
+  const transByCat = transactions[cardId] || [];
+  const periodsSumms = help.getPeriodsSumms(transByCat)
 
   const handleToggleCard = () => {
     const pathname = `/${cardId}`;
@@ -16,19 +22,17 @@ const MainInfo = ({ title, cardId = '', summsOfPeriod }) => {
   };
   return (
     <Section title={title}>
-      <Container>
-        <p>RUB</p>
-        <Button title="Add" cbOnClick={handleToggleCard} cbArgs={[cardId]} />
-        {summsOfPeriod && (
-          <List>
-            {summsOfPeriod.map(({ name, value }) => (
-              <Item key={name || help.generateId()}>
-                <span>{name}</span>
-                <span>{value}</span>
-              </Item>
-            ))}
-          </List>
-        )}
+      <Container className={css.infoFrame}> 
+        <Button className={css.addButton} title="Add" cbOnClick={handleToggleCard} cbArgs={[cardId]} />
+        <p className={css.currency}>RUB</p>
+        <List>
+          {setsPeriodsList.map(({ name, id }) => (
+            <Item key={id}>
+              <span>{name}</span>
+              <span>{periodsSumms[id] || '0.00'}</span>
+            </Item>
+          ))}
+        </List>
       </Container>
     </Section>
   );

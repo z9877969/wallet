@@ -8,11 +8,14 @@ import LableInput from '../components/share/LableInput';
 import CategoriesList from '../components/CategoriesList';
 import Section from '../components/share/Section/Section';
 import Container from '../components/share/Container/Container';
-
 import costsOpts from '../db/costs.json';
 import incomesOpts from '../db/incomes.json';
-
-import { addCosts, addIncomes } from '../redux/transactions/transactionsOperations';
+import {
+  addCosts,
+  addIncomes,
+  editCosts,
+  editIncomes,
+} from '../redux/transactions/transactionsOperations';
 
 const { categoriesList: costsList } = costsOpts;
 const { categoriesList: incomesList } = incomesOpts;
@@ -28,33 +31,47 @@ class TransactionPage extends Component {
     summ: '',
     currency: 'RUB',
     comment: '',
-    isCategoriesList: false,
   };
 
+  componentDidMount() {
+    const { category, transactionId } = this.props.match.params;
+    const data = this.props[category] || [];
+    const editTransaction = data.find(({ id }) => id === Number(transactionId));
+    if (category && transactionId) {
+      this.setState({ ...editTransaction });
+    }
+  }
+
   handleSubmitTransaction = e => {
-    const { match, addCosts, addIncomes } = this.props;
-    const { isCategoriesList, ...dataForm } = this.state;
+    const { category, transactionId } = this.props.match.params;
+    const { match, addCosts, addIncomes, editIncomes, editCosts } = this.props;
+    const { ...dataForm } = this.state;
     const cardId = match.url.slice(1);
     e.preventDefault();
+
+    if (category && transactionId) {
+      category === 'incomes' && editIncomes(transactionId, this.state);
+      category === 'costs' && editCosts(transactionId, this.state);
+      this.handleGoToHome();
+    }
+
     cardId === 'incomes' && addIncomes(dataForm);
     cardId === 'costs' && addCosts(dataForm);
-
     this.handleGoToHome();
   };
 
   handleChange = e => {
     const { name, value } = e.target;
-
     this.setState({ [name]: value });
   };
 
   openCategoriesList = () => {
-    const { history, location } = this.props;
-    const baseLocation = {
-      pathname: `${location.pathname}/category`,
-      state: location,
+    const { history, location, match } = this.props;
+    const nextLocation = {
+      pathname: `${match.url}/category`,
+      state: { from: location },
     };
-    history.push(baseLocation);
+    history.push(nextLocation);
   };
 
   onSetCategory = opts => {
@@ -65,7 +82,7 @@ class TransactionPage extends Component {
   };
 
   handleGoBack = () => {
-    this.props.history.push(this.props.location.state);
+    this.props.history.push(this.props.location.state.from);
   };
 
   handleGoToHome = () => {
@@ -73,13 +90,13 @@ class TransactionPage extends Component {
   };
 
   render() {
-    const { title, match } = this.props;
+    const { title, match, location } = this.props;
     const cardId = match.url.slice(1);
     const { date, time, category, summ, currency, comment } = this.state;
 
     return (
       <>
-        {this.props.location.pathname === `/${cardId}` && (
+        {location.pathname === `/${cardId}` && (
           <Section>
             <Container>
               <Button cbOnClick={this.handleGoToHome} title={'Go back'} />
@@ -134,7 +151,7 @@ class TransactionPage extends Component {
           </Section>
         )}
         <Route
-          path={`${this.props.match.url}/category`}
+          path={`${match.path}/category`}
           render={props => (
             <CategoriesList
               {...props}
@@ -151,9 +168,10 @@ class TransactionPage extends Component {
   }
 }
 
-// const mapStateToProps = store => ({
-//   incomes: store.transactions.incomes,
-// });
+const mapStateToProps = store => ({
+  incomes: store.transactions.incomes,
+  costs: store.transactions.costs,
+});
 
 // const mapDispatchToProps = dispatch => ({
 //   addIncomes(data) {
@@ -164,10 +182,12 @@ class TransactionPage extends Component {
 const mapDispatchToProps = {
   addIncomes,
   addCosts,
+  editIncomes,
+  editCosts,
 };
 
 // this.props.incomes
 
-export default connect(null, mapDispatchToProps)(TransactionPage);
+export default connect(mapStateToProps, mapDispatchToProps)(TransactionPage);
 
 // const con = (mSTP, mDTP) => (component) => "UpdateComponent"

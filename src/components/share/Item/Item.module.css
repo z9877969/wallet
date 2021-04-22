@@ -7,3 +7,7 @@
 .item.col:not(:last-child) {
     margin-bottom: 1rem;
 }   
+
+.item span + span {
+    margin-left: 0.5rem;
+}

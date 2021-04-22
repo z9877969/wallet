@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Route, Switch } from 'react-router';
 import { useDispatch } from 'react-redux';
 import MainPage from './pages/MainPage';
@@ -14,11 +14,6 @@ import {
 
 const App = () => {
   const dispatch = useDispatch();
-  const [activeCard, setActiveCard] = useState('');
-
-  const handleToggleCard = (cardId = '') => {
-    setActiveCard(cardId);
-  };
 
   useEffect(() => {
     dispatch(getIncomes());
@@ -32,44 +27,29 @@ const App = () => {
           path="/"
           exact
           render={roterProps => (
-            <MainPage
-              {...roterProps}
-              costsDb={costsDb}
-              incomesDb={incomesDb}
-              handleToggleCard={handleToggleCard}
-            />
+            <MainPage {...roterProps} costsDb={costsDb} incomesDb={incomesDb} />
           )}
         />
         <Route
-          path="/costs"
-          render={props => (
-            <TransactionPage
-              {...props}
-              title={'Расходы'}
-              handleToggleCard={handleToggleCard}
-              cardId="costs"
-            />
-          )}
-        />
-        <Route
-          path="/incomes"
-          render={props => (
-            <TransactionPage
-              {...props}
-              title={'Доходы'}
-              handleToggleCard={handleToggleCard}
-              cardId="incomes"
-            />
-          )}
-        />
-        <Route
+          exact
           path="/categories/:category/list"
           render={() => <PageTransactionsList />}
         />
-        {/* <Route path="/categories/:category" component={PageCategoriesForPeriod}/> */}
+        <Route
+          path="/:category/:transactionId/edit"
+          component={TransactionPage}
+        />
         <Route
           path="/categories/:category"
           render={() => <PageCategoriesForPeriod />}
+        />
+        <Route
+          path="/costs"
+          render={props => <TransactionPage {...props} title={'Расходы'} />}
+        />
+        <Route
+          path="/incomes"
+          render={props => <TransactionPage {...props} title={'Доходы'} />}
         />
       </Switch>
     </>

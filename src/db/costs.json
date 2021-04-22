@@ -1,24 +1,9 @@
 {
-    "mainPageList": [
-        {
-            "name": "сегодня",
-            "value": "0,00"
-        },
-        {
-            "name": "неделя",
-            "value": "0,00"
-        },
-        {
-            "name": "месяц",
-            "value": "0,00"
-        }
-    ],
+  "mainPageTitle": "Расходы",
 
-    "mainPageTitle": "Расходы",
-
-    "categoriesList": [
-        { "id": "food", "name": "Еда" },
-        { "id": "car", "name": "Машина" },
-        { "id": "farmacy", "name": "Аптека" }
-    ]
+  "categoriesList": [
+    { "name": "Еда" },
+    { "name": "Машина" },
+    { "name": "Аптека" }
+  ]
 }

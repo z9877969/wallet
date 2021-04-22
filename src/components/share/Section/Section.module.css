@@ -1,4 +1,16 @@
-.title {
-    /* margin: 0 auto; */
-    text-align: center;
+.section {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
 }
+
+.section:nth-child(2n) {
+    background-color: lightsteelblue;
+}
+
+.title {
+  text-align: center;
+  margin: 0;
+  margin-bottom: 0.8rem;
+}
+
+
