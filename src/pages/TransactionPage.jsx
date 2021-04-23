@@ -102,6 +102,23 @@ class TransactionPage extends Component {
               <Button cbOnClick={this.handleGoToHome} title={'Go back'} />
               <h1>{title}</h1>
               <Form onSubmit={this.handleSubmitTransaction}>
+                {getInputs(this.state, {
+                  handleChange: this.handleChange,
+                  handleClick: this.openCategoriesList,
+                }).map(
+                  ({ title, type, name, value, handleChange, handleClick }) => (
+                    <LableInput
+                      key={name}
+                      title={title}
+                      type={type}
+                      name={name}
+                      value={value}
+                      handleChange={handleChange}
+                      handleClick={handleClick}
+                    />
+                  ),
+                )}
+                {/* 
                 <LableInput
                   title="День"
                   type="date"
@@ -145,7 +162,7 @@ class TransactionPage extends Component {
                   value={comment}
                   handleChange={this.handleChange}
                   placeholder="Комментарий"
-                />
+                /> */}
               </Form>
             </Container>
           </Section>
@@ -173,12 +190,6 @@ const mapStateToProps = store => ({
   costs: store.transactions.costs,
 });
 
-// const mapDispatchToProps = dispatch => ({
-//   addIncomes(data) {
-//     return dispatch(addIncomes(data));
-//   },
-// });
-
 const mapDispatchToProps = {
   addIncomes,
   addCosts,
@@ -186,8 +197,51 @@ const mapDispatchToProps = {
   editCosts,
 };
 
-// this.props.incomes
-
 export default connect(mapStateToProps, mapDispatchToProps)(TransactionPage);
 
-// const con = (mSTP, mDTP) => (component) => "UpdateComponent"
+function getInputs(state, cbs) {
+  return [
+    {
+      title: 'День',
+      type: 'date',
+      name: 'date',
+      value: state.date,
+      handleChange: cbs['handleChange'],
+    },
+    {
+      title: 'Время',
+      type: 'time',
+      name: 'time',
+      value: state.time,
+      handleChange: cbs['handleChange'],
+    },
+    {
+      title: 'Категории',
+      type: 'button',
+      name: 'category',
+      value: state.category.name,
+      handleClick: cbs['handleClick'],
+    },
+    {
+      title: 'Сумма',
+      type: 'text',
+      name: 'summ',
+      value: state.summ,
+      handleChange: cbs['handleChange'],
+    },
+    {
+      title: 'Валюта',
+      type: 'text',
+      name: 'currency',
+      value: state.currency,
+      handleChange: cbs['handleChange'],
+    },
+    {
+      title: 'Комментарий',
+      type: 'text',
+      name: 'comment',
+      value: state.comment,
+      handleChange: cbs['handleChange'],
+    },
+  ];
+}
