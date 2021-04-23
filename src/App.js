@@ -23,9 +23,11 @@ const App = () => {
   const handleLogout = () => dispatch(logout());
 
   useEffect(() => {
-    dispatch(getIncomes());
-    dispatch(getCosts());
-  }, []);
+    if (isAuth) {
+      dispatch(getIncomes());
+      dispatch(getCosts());
+    }
+  }, [isAuth]);
 
   return (
     <>
