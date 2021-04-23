@@ -5,9 +5,9 @@ import {
   addCostsCat,
   addIncomesCat,
 } from '../../redux/categories/categoriesOperation';
-import Button from '../share/Button';
-import Form from '../share/Form';
-import css from '../share/Form/Form.module.css';
+import Button from '../_share/Button';
+import Form from '../_share/Form';
+import css from '../_share/Form/Form.module.css';
 
 const AddCategory = () => {
   const dispatch = useDispatch();

@@ -1,8 +1,8 @@
 import { useHistory } from 'react-router-dom';
 import MainInfo from '../components/MainInfo';
-import Button from '../components/share/Button';
-import Section from '../components/share/Section/Section';
-import Container from '../components/share/Container/Container';
+import Button from '../components/_share/Button';
+import Section from '../components/_share/Section/Section';
+import Container from '../components/_share/Container/Container';
 
 const balance = [{ name: 'Все время', value: '0,00' }];
 

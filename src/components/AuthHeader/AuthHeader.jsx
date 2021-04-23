@@ -1,6 +1,6 @@
 import { NavLink } from 'react-router-dom';
-import Item from '../share/Item';
-import List from '../share/List';
+import Item from '../_share/Item';
+import List from '../_share/List';
 
 const AuthHeader = () => {
   return (
@@ -8,7 +8,7 @@ const AuthHeader = () => {
       <nav>
         <List>
           <Item>
-            <NavLink to="/">Logo</NavLink>
+            <NavLink to="/">Home</NavLink>
           </Item>
           <Item>
             <NavLink to="/login">LogIn</NavLink>

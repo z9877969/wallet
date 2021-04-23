@@ -1,11 +1,11 @@
 import { useEffect } from 'react';
 import { Route } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
-import Button from '../share/Button';
-import Container from '../share/Container/Container';
-import Item from '../share/Item';
-import List from '../share/List';
-import Section from '../share/Section/Section';
+import Button from '../_share/Button';
+import Container from '../_share/Container/Container';
+import Item from '../_share/Item';
+import List from '../_share/List';
+import Section from '../_share/Section/Section';
 import AddCategory from '../AddCategory/AddCategory';
 import css from './CategoriesList.module.css';
 import {

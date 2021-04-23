@@ -1,11 +1,11 @@
 import { connect } from 'react-redux';
 import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 
-import Button from '../components/share/Button';
-import Container from '../components/share/Container/Container';
-import Item from '../components/share/Item';
-import List from '../components/share/List';
-import Section from '../components/share/Section/Section';
+import Button from '../components/_share/Button';
+import Container from '../components/_share/Container/Container';
+import Item from '../components/_share/Item';
+import List from '../components/_share/List';
+import Section from '../components/_share/Section/Section';
 
 import { addTransactionListId } from '../redux/transactions/transactionsAction';
 import help from '../utils/helpers';

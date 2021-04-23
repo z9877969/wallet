@@ -2,12 +2,12 @@ import { Component } from 'react';
 import moment from 'moment';
 import { Route } from 'react-router';
 import { connect } from 'react-redux';
-import Button from '../components/share/Button';
-import Form from '../components/share/Form';
-import LableInput from '../components/share/LableInput';
+import Button from '../components/_share/Button';
+import Form from '../components/_share/Form';
+import LableInput from '../components/_share/LableInput';
 import CategoriesList from '../components/CategoriesList';
-import Section from '../components/share/Section/Section';
-import Container from '../components/share/Container/Container';
+import Section from '../components/_share/Section/Section';
+import Container from '../components/_share/Container/Container';
 import costsOpts from '../db/costs.json';
 import incomesOpts from '../db/incomes.json';
 import {
@@ -118,51 +118,6 @@ class TransactionPage extends Component {
                     />
                   ),
                 )}
-                {/* 
-                <LableInput
-                  title="День"
-                  type="date"
-                  name="date"
-                  value={date}
-                  handleChange={this.handleChange}
-                />
-                <LableInput
-                  title="Время"
-                  type="time"
-                  name="time"
-                  value={time}
-                  handleChange={this.handleChange}
-                />
-                <LableInput
-                  title="Категории"
-                  type="button"
-                  name="category"
-                  value={category.name}
-                  handleClick={this.openCategoriesList}
-                />
-                <LableInput
-                  title="Сумма"
-                  type="text"
-                  name="summ"
-                  value={summ}
-                  handleChange={this.handleChange}
-                  placeholder="Введите сумму"
-                />
-                <LableInput
-                  title="Валюта"
-                  type="button"
-                  name="currency"
-                  value={currency}
-                  handleChange={this.handleChange}
-                />
-                <LableInput
-                  title="Комментарий"
-                  type="text"
-                  name="comment"
-                  value={comment}
-                  handleChange={this.handleChange}
-                  placeholder="Комментарий"
-                /> */}
               </Form>
             </Container>
           </Section>

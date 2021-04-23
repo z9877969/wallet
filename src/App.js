@@ -12,6 +12,9 @@ import {
   getIncomes,
 } from './redux/transactions/transactionsOperations';
 import AuthHeader from './components/AuthHeader/AuthHeader';
+import PublicRotes from './components/_routes/PublicRotes';
+import LoginPage from './pages/LoginPage';
+import PrivatRoute from './components/_routes/PrivatRoute';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -21,38 +24,54 @@ const App = () => {
     dispatch(getCosts());
   }, []);
 
+  const isAuth = true;
+
   return (
     <>
       <AuthHeader />
       <Switch>
-        <Route
+        <PublicRotes path="/login" isAuth={isAuth} component={LoginPage} />
+        <PublicRotes path="/register" isAuth={isAuth} component={LoginPage} />
+        <PrivatRoute
+          isAuth={isAuth}
           path="/"
-          exact
-          render={roterProps => (
-            <MainPage {...roterProps} costsDb={costsDb} incomesDb={incomesDb} />
-          )}
+          exact={true}
+          component={MainPage}
+          {...{ costsDb, incomesDb, isAuth }}
         />
-        <Route
-          exact
+        <PrivatRoute
+          isAuth={isAuth}
           path="/categories/:category/list"
-          render={() => <PageTransactionsList />}
+          // exact={true}
+          component={PageTransactionsList}
         />
-        <Route
+        <PrivatRoute
+          isAuth={isAuth}
           path="/:category/:transactionId/edit"
           component={TransactionPage}
         />
-        <Route
-          path="/categories/:category"
-          render={() => <PageCategoriesForPeriod />}
+        <PrivatRoute
+          isAuth={isAuth}
+          // exact
+          path="/:category/categories"
+          component={PageCategoriesForPeriod}
         />
-        <Route
+        <PrivatRoute
+          isAuth={isAuth}
           path="/costs"
-          render={props => <TransactionPage {...props} title={'Расходы'} />}
+          title="Расходы"
+          component={TransactionPage}
         />
-        <Route
+        <PrivatRoute
+          isAuth={isAuth}
+          path="/incomes"
+          title="Доходы"
+          component={TransactionPage}
+        />
+        {/* <Route
           path="/incomes"
           render={props => <TransactionPage {...props} title={'Доходы'} />}
-        />
+        /> */}
       </Switch>
     </>
   );
