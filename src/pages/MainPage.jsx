@@ -1,5 +1,4 @@
 import { useHistory } from 'react-router-dom';
-import { connect } from 'react-redux';
 import MainInfo from '../components/MainInfo';
 import Button from '../components/share/Button';
 import Section from '../components/share/Section/Section';
@@ -7,8 +6,7 @@ import Container from '../components/share/Container/Container';
 
 const balance = [{ name: 'Все время', value: '0,00' }];
 
-const MainPage = props => {
-  const { costsDb, incomesDb } = props;
+const MainPage = ({ costsDb, incomesDb }) => {
   const history = useHistory();
 
   const handlerOpenCosts = () => {
@@ -31,9 +29,4 @@ const MainPage = props => {
   );
 };
 
-const mapStateToProps = state => ({
-  incomes: state.transactions.incomes,
-  costs: state.transactions.costs,
-});
-
-export default connect(mapStateToProps)(MainPage);
+export default MainPage;
