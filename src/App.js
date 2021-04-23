@@ -11,6 +11,7 @@ import {
   getCosts,
   getIncomes,
 } from './redux/transactions/transactionsOperations';
+import AuthHeader from './components/AuthHeader/AuthHeader';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -22,6 +23,7 @@ const App = () => {
 
   return (
     <>
+      <AuthHeader />
       <Switch>
         <Route
           path="/"
