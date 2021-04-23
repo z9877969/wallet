@@ -1,6 +1,6 @@
 import { useDispatch } from 'react-redux';
 import { useRouteMatch } from 'react-router-dom';
-import LoginForm from '../components/LoginForm/LoginForm';
+import AuthForm from '../components/AuthForm/AuthForm';
 import { login, register } from '../redux/auth/authAction';
 
 const AuthPage = () => {
@@ -11,7 +11,7 @@ const AuthPage = () => {
     path === '/login' && dispatch(login(data));
     path === '/register' && dispatch(register(data));
   };
-  return <LoginForm handleSubmit={handleSubmit} path={path} />;
+  return <AuthForm handleSubmit={handleSubmit} path={path} />;
 };
 
 export default AuthPage;

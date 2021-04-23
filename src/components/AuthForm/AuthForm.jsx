@@ -10,7 +10,7 @@ const initialFormState = {
   password: '',
 };
 
-const LoginForm = ({ handleSubmit, path }) => {
+const AuthForm = ({ handleSubmit, path }) => {
   const [dataForm, setDataForm] = useState(initialFormState);
   const { login, password } = dataForm;
   const handleChange = e => {
@@ -47,4 +47,4 @@ const LoginForm = ({ handleSubmit, path }) => {
   );
 };
 
-export default LoginForm;
+export default AuthForm;

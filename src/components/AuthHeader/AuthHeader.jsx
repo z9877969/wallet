@@ -12,7 +12,6 @@ const AuthHeader = ({ isAuth, handleLogout }) => {
           </Item>
           {!isAuth ? (
             <>
-            {console.log('isAuth :>> ', isAuth)}
               <Item>
                 <NavLink to="/login">LogIn</NavLink>
               </Item>
