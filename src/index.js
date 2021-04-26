@@ -7,6 +7,8 @@ import { store, persistor } from './redux/store';
 import App from './App';
 import './index.css';
 
+import {signUp, signIn} from './services/firebaseApi';
+
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
@@ -19,3 +21,10 @@ ReactDOM.render(
   </React.StrictMode>,
   document.getElementById('root'),
 );
+
+const data = {
+  email: "nikon@mail.com",
+  password: "xxxxxxxx"
+}
+
+signUp(data);
