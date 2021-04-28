@@ -6,8 +6,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { store, persistor } from './redux/store';
 import App from './App';
 import './index.css';
-
-import {signUp, signIn} from './services/firebaseApi';
+import { signUp } from './services/firebaseApi';
 
 ReactDOM.render(
   <React.StrictMode>
@@ -22,9 +21,6 @@ ReactDOM.render(
   document.getElementById('root'),
 );
 
-const data = {
-  email: "nikon@mail.com",
-  password: "xxxxxxxx"
-}
-
-signUp(data);
+// signUp({ email: 'gim2@mail.com', password: 'xxxxxxxx' })
+//   .then(console.log)
+//   .catch(e => console.log(e));

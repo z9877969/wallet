@@ -1,15 +1,36 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { login, logout, register } from './authAction';
+import { loginSuccess, logoutSuccess, registerSuccess } from './authAction';
 
 const initialState = {
-  email: '',
+  user: {
+    email: '',
+    idToken: '',
+    localId: '',
+  },
   isAuth: false,
 };
 
 const authReducer = createReducer(initialState, {
-  [login]: (_, { payload }) => ({ email: payload.email, isAuth: true }),
-  [register]: (_, { payload }) => ({ email: payload.email, isAuth: true }),
-  [logout]: () => initialState,
+  [loginSuccess]: (_, { payload }) => ({
+    user: {
+      email: payload.email,
+      idToken: payload.idToken,
+      localId: payload.localId,
+    },
+    isAuth: true,
+  }),
+  [registerSuccess]: (_, { payload }) => {
+    console.log('payload :>> ', payload);
+    return {
+      user: {
+        email: payload.email,
+        idToken: payload.idToken,
+        localId: payload.localId,
+      },
+      isAuth: true,
+    };
+  },
+  [logoutSuccess]: () => initialState,
 });
 
 export default authReducer;

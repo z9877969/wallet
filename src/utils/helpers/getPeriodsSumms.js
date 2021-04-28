@@ -20,7 +20,8 @@ const getSummForPeriods = dataForPeriod => {
 };
 
 const getPeriodsSumms = (data = []) => {
-  const today = data.filter(elem => elem.date === currentDate);
+  const today = data.filter(elem => {
+    return elem.date === currentDate});
   const week = data.filter(
     elem =>
       moment(elem.date).week() === currentWeek &&

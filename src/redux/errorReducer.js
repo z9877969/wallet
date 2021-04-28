@@ -1,5 +1,11 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { addCostsCatError, addIncomesCatError, getCostsCatError, getIncomesCatError } from './categories/categoriesAction';
+import { registerError } from './auth/authAction';
+import {
+  addCostsCatError,
+  addIncomesCatError,
+  getCostsCatError,
+  getIncomesCatError,
+} from './categories/categoriesAction';
 import {
   addCostsError,
   addIncomesError,
@@ -18,12 +24,13 @@ const errorReducer = createReducer(null, {
   [getCostsError]: (_, { payload }) => payload,
   [removeCostsError]: (_, { payload }) => payload,
   [removeIncomesError]: (_, { payload }) => payload,
-  [editIncomesError]: (_, {payload}) => payload,
-  [editCostsError]: (_, {payload}) => payload,
-  [getIncomesCatError]: (_, {payload}) => payload,
-  [getCostsCatError]: (_, {payload}) => payload,
-  [addCostsCatError]: (_, {payload}) => payload,
-  [addIncomesCatError]: (_, {payload}) => payload,
+  [editIncomesError]: (_, { payload }) => payload,
+  [editCostsError]: (_, { payload }) => payload,
+  [getIncomesCatError]: (_, { payload }) => payload,
+  [getCostsCatError]: (_, { payload }) => payload,
+  [addCostsCatError]: (_, { payload }) => payload,
+  [addIncomesCatError]: (_, { payload }) => payload,
+  [registerError]: (_, { payload }) => payload,
 });
 
 export default errorReducer;

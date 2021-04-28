@@ -26,23 +26,34 @@ import {
   editIncomesError,
 } from './transactionsAction';
 
-axios.defaults.baseURL = 'http://localhost:4040';
+import { getTransactionsApi, addTransaction } from '../../services/firebaseApi';
 
-export const addCosts = data => dispatch => {
+export const addCosts = data => (dispatch, getState) => {
+  const { localId, idToken } = getState().auth.user;
+
   dispatch(addCostsRequest());
 
-  axios
-    .post('/costs', data)
-    .then(({ data }) => dispatch(addCostsSuccess(data)))
+  addTransaction({
+    data,
+    localId,
+    transactionType: 'costs',
+    idToken,
+  })
+    .then((data) => dispatch(addCostsSuccess(data)))
     .catch(err => dispatch(addCostsError(err.message)));
 };
 
-export const addIncomes = data => dispatch => {
+export const addIncomes = data => (dispatch, getState) => {
+  const { localId, idToken } = getState().auth.user;
   dispatch(addIncomesRequest());
-
-  axios
-    .post('/incomes', data)
-    .then(({ data }) => dispatch(addIncomesSuccess(data)))
+  
+  addTransaction({
+    data,
+    localId,
+    transactionType: 'incomes',
+    idToken,
+  })
+    .then((data) => dispatch(addIncomesSuccess(data)))
     .catch(err => dispatch(addIncomesError(err.message)));
 };
 
@@ -62,6 +73,17 @@ export const getCosts = () => dispatch => {
     .get('/costs')
     .then(({ data }) => dispatch(getCostsSuccess(data)))
     .catch(err => dispatch(getCostsError(err.message)));
+};
+
+export const getTransactions = () => (dispatch, getState) => {
+  dispatch(getCostsRequest());
+  const { localId, idToken } = getState().auth.user;
+  getTransactionsApi({ userId: localId, idToken })
+    .then(({ incomes, costs }) => {
+      dispatch(getCostsSuccess(costs || []));
+      dispatch(getIncomesSuccess(incomes || []));
+    })
+    .catch(e => dispatch(getCostsError(e)));
 };
 
 export const removeCosts = id => dispatch => {

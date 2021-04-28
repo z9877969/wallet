@@ -12,20 +12,22 @@ import incomesDb from './db/incomes.json';
 import {
   getCosts,
   getIncomes,
+  getTransactions,
 } from './redux/transactions/transactionsOperations';
-import { getIsAuth } from './redux/auth/authSelector';
-import { logout } from './redux/auth/authAction';
+import { getIsAuth, getIsToken } from './redux/auth/authSelector';
+import { logoutSuccess } from './redux/auth/authAction';
 
 const App = () => {
   const dispatch = useDispatch();
-  const isAuth = useSelector(getIsAuth);
+  const isAuth = useSelector(getIsToken);
 
-  const handleLogout = () => dispatch(logout());
+  const handleLogout = () => dispatch(logoutSuccess());
 
   useEffect(() => {
     if (isAuth) {
-      dispatch(getIncomes());
-      dispatch(getCosts());
+      dispatch(getTransactions())
+      // dispatch(getIncomes());
+      // dispatch(getCosts());
     }
   }, [isAuth]);
 

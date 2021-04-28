@@ -14,7 +14,8 @@ const MainInfo = ({ title, cardId }) => {
   const transactions = useSelector(state => state.transactions);
 
   const transByCat = transactions[cardId] || [];
-  const periodsSumms = help.getPeriodsSumms(transByCat)
+  // console.log('transByCat :>> ', transByCat, cardId);
+  const periodsSumms = help.getPeriodsSumms(transByCat);
 
   const handleToggleCard = () => {
     const pathname = `/${cardId}`;
@@ -22,17 +23,24 @@ const MainInfo = ({ title, cardId }) => {
   };
   return (
     <Section title={title}>
-      <Container className={css.infoFrame}> 
-        <Button className={css.addButton} title="Add" cbOnClick={handleToggleCard} cbArgs={[cardId]} />
+      <Container className={css.infoFrame}>
+        <Button
+          className={css.addButton}
+          title="Add"
+          cbOnClick={handleToggleCard}
+          cbArgs={[cardId]}
+        />
         <p className={css.currency}>RUB</p>
-        <List>
-          {setsPeriodsList.map(({ name, id }) => (
-            <Item key={id}>
-              <span>{name}</span>
-              <span>{periodsSumms[id] || '0.00'}</span>
-            </Item>
-          ))}
-        </List>
+        {cardId && (
+          <List>
+            {setsPeriodsList.map(({ name, id }) => (
+              <Item key={id}>
+                <span>{name}</span>
+                <span>{periodsSumms[id] || '0.00'}</span>
+              </Item>
+            ))}
+          </List>
+        )}
       </Container>
     </Section>
   );

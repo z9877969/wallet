@@ -1,5 +1,6 @@
 import {
   configureStore,
+  combineReducers,
   getDefaultMiddleware,
 } from '@reduxjs/toolkit';
 import {
@@ -21,7 +22,7 @@ import auth from './auth/authReducer';
 const persistConfigAuth = {
   key: 'auth',
   version: 1,
-  whitelist: ["isAuth"],
+  whitelist: ['user'],
   storage,
 };
 
@@ -30,10 +31,7 @@ export const store = configureStore({
     transactions,
     error,
     category,
-    auth: persistReducer(
-      persistConfigAuth,
-      auth,
-    ),
+    auth: persistReducer(persistConfigAuth, auth),
   },
   middleware: getDefaultMiddleware({
     serializableCheck: {

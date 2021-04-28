@@ -19,7 +19,7 @@ const MainPage = ({ costsDb, incomesDb }) => {
       <Section title={'Журнал рассходов'}>
         <MainInfo title={costsDb.mainPageTitle} cardId="costs" />
         <MainInfo title={incomesDb.mainPageTitle} cardId="incomes" />
-        <MainInfo title={'Баланс'} dataList={balance} />
+        {/* <MainInfo title={'Баланс'} dataList={balance} /> */}
         <Container>
           <Button title={'Все расходы'} cbOnClick={handlerOpenCosts} />
           <Button title={'Все доходы'} cbOnClick={handlerOpenIncomes} />
