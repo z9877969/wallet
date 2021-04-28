@@ -14,7 +14,6 @@ const MainInfo = ({ title, cardId }) => {
   const transactions = useSelector(state => state.transactions);
 
   const transByCat = transactions[cardId] || [];
-  // console.log('transByCat :>> ', transByCat, cardId);
   const periodsSumms = help.getPeriodsSumms(transByCat);
 
   const handleToggleCard = () => {

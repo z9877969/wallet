@@ -17,10 +17,6 @@ const userRegister = dataPost => async dispatch => {
     const data = await signUp(dataPost);
     
     dispatch(registerSuccess(data));
-    // if (data) {
-    // } else {
-    //   throw new Error('Data undefined');
-    // }
   } catch (e) {
     dispatch(registerError(e.message));
     throw e;
