@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useReducer } from 'react';
 import { NavLink } from 'react-router-dom';
 import Container from '../share/Container/Container';
 import Form from '../share/Form';
@@ -10,17 +10,31 @@ const initialFormState = {
   password: '',
 };
 
+const reducer = (state, { type, payload }) => {
+  switch (type) {
+    case 'login':
+      return { ...state, login: payload };
+    case 'password':
+      return { ...state, password: payload };
+    case 'reset':
+      return initialFormState;
+    default:
+      return state;
+  }
+};
+
 const AuthForm = ({ handleSubmit, path }) => {
-  const [dataForm, setDataForm] = useState(initialFormState);
-  const { login, password } = dataForm;
+  const [state, dispatch] = useReducer(reducer, initialFormState);
+
+  const { login, password } = state;
   const handleChange = e => {
     const { name, value } = e.target;
-    setDataForm({ ...dataForm, [name]: value });
+    dispatch({ type: name, payload: value });
   };
   const onSubmit = e => {
     e.preventDefault();
-    handleSubmit(dataForm);
-    setDataForm(initialFormState);
+    handleSubmit(state);
+    dispatch({ type: initialFormState });
   };
 
   return (

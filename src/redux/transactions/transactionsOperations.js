@@ -39,21 +39,21 @@ export const addCosts = data => (dispatch, getState) => {
     transactionType: 'costs',
     idToken,
   })
-    .then((data) => dispatch(addCostsSuccess(data)))
+    .then(data => dispatch(addCostsSuccess(data)))
     .catch(err => dispatch(addCostsError(err.message)));
 };
 
 export const addIncomes = data => (dispatch, getState) => {
   const { localId, idToken } = getState().auth.user;
   dispatch(addIncomesRequest());
-  
+
   addTransaction({
     data,
     localId,
     transactionType: 'incomes',
     idToken,
   })
-    .then((data) => dispatch(addIncomesSuccess(data)))
+    .then(data => dispatch(addIncomesSuccess(data)))
     .catch(err => dispatch(addIncomesError(err.message)));
 };
 
@@ -79,9 +79,10 @@ export const getTransactions = () => (dispatch, getState) => {
   dispatch(getCostsRequest());
   const { localId, idToken } = getState().auth.user;
   getTransactionsApi({ userId: localId, idToken })
-    .then(({ incomes, costs }) => {
-      dispatch(getCostsSuccess(costs || []));
-      dispatch(getIncomesSuccess(incomes || []));
+    .then(data => {
+      const { costs = [], incomes = [] } = data;
+      dispatch(getCostsSuccess(costs));
+      dispatch(getIncomesSuccess(incomes));
     })
     .catch(e => dispatch(getCostsError(e)));
 };

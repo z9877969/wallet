@@ -1,6 +1,6 @@
-import { Component } from 'react';
+import { Component, useEffect, useReducer, useState } from 'react';
 import moment from 'moment';
-import { Route } from 'react-router';
+import { Route, useHistory, useLocation, useRouteMatch } from 'react-router';
 import { connect } from 'react-redux';
 import Button from '../components/share/Button';
 import Form from '../components/share/Form';
@@ -20,12 +20,55 @@ import {
 const { categoriesList: costsList } = costsOpts;
 const { categoriesList: incomesList } = incomesOpts;
 
-class TransactionPage extends Component {
-  state = {
+// let i = 0
+
+const reducer = (state, action) => {
+  switch (action.type) {
+    case 'date':
+      return { ...state, date: action.payload };
+    case 'time':
+      return { ...state, time: action.payload };
+    case 'category':
+      return { ...state, category: action.payload };
+    case 'summ':
+      return { ...state, summ: action.payload };
+    case 'currency':
+      return { ...state, currency: action.payload };
+    case 'comment':
+      return { ...state, comment: action.payload };
+    case 'initialEdit':
+      return { ...action.payload };
+    default:
+      return state;
+  }
+};
+
+const TransactionPage = props => {
+  const {
+    match,
+    location,
+    history,
+    addCosts,
+    addIncomes,
+    editIncomes,
+    editCosts,
+    title,
+  } = props;
+  const cardId = match.url.slice(1);
+
+  // const matchHook = useRouteMatch();
+  // const locationHook = useLocation();
+  // const historyHook = useHistory();
+
+  // console.log('matchHook :>> ', matchHook);
+  // console.log('locationHook :>> ', locationHook);
+  // console.log('historyHook :>> ', historyHook);
+
+  const initialState = {
     date: moment().format('YYYY-MM-DD'),
     time: moment().format('HH:mm'),
     category:
-      this.props.match.url.slice(1) === 'costs'
+      match.url.slice(1) === 'costs'
         ? { id: 'food', name: 'Еда' }
         : { id: 'salary', name: 'Зарплата' },
     summ: '',
@@ -33,40 +76,31 @@ class TransactionPage extends Component {
     comment: '',
   };
 
-  componentDidMount() {
-    const { category, transactionId } = this.props.match.params;
-    const data = this.props[category] || [];
-    const editTransaction = data.find(({ id }) => id === Number(transactionId));
-    if (category && transactionId) {
-      this.setState({ ...editTransaction });
-    }
-  }
+  // const [dataForm, setDataForm] = useState(initialState);
+  const [stateForm, dispatch] = useReducer(reducer, initialState);
 
-  handleSubmitTransaction = e => {
-    const { category, transactionId } = this.props.match.params;
-    const { match, addCosts, addIncomes, editIncomes, editCosts } = this.props;
-    const { ...dataForm } = this.state;
-    const cardId = match.url.slice(1);
+  const handleSubmitTransaction = e => {
+    const { category, transactionId } = match.params;
     e.preventDefault();
 
     if (category && transactionId) {
-      category === 'incomes' && editIncomes(transactionId, this.state);
-      category === 'costs' && editCosts(transactionId, this.state);
-      this.handleGoToHome();
+      category === 'incomes' && editIncomes(transactionId, stateForm);
+      category === 'costs' && editCosts(transactionId, stateForm);
+      handleGoToHome();
     }
 
-    cardId === 'incomes' && addIncomes(dataForm);
-    cardId === 'costs' && addCosts(dataForm);
-    this.handleGoToHome();
+    cardId === 'incomes' && addIncomes(stateForm);
+    cardId === 'costs' && addCosts(stateForm);
+    handleGoToHome();
   };
 
-  handleChange = e => {
+  const handleChange = e => {
     const { name, value } = e.target;
-    this.setState({ [name]: value });
+    // setDataForm({ ...dataForm, [name]: value });
+    dispatch({ type: name, payload: value });
   };
 
-  openCategoriesList = () => {
-    const { history, location, match } = this.props;
+  const openCategoriesList = () => {
     const nextLocation = {
       pathname: `${match.url}/category`,
       state: { from: location },
@@ -74,70 +108,79 @@ class TransactionPage extends Component {
     history.push(nextLocation);
   };
 
-  onSetCategory = opts => {
-    this.setState({
-      category: opts,
-    });
-    this.handleGoBack();
+  const onSetCategory = opts => {
+    // setDataForm({ ...dataForm, category: opts });
+    dispatch({ type: 'category', payload: opts });
+    handleGoBack();
   };
 
-  handleGoBack = () => {
-    this.props.history.push(this.props.location.state.from);
+  const handleGoBack = () => {
+    history.push(location.state.from);
   };
 
-  handleGoToHome = () => {
-    this.props.history.push('/');
+  const handleGoToHome = () => {
+    history.push('/');
   };
 
-  render() {
-    const { title, match, location } = this.props;
-    const cardId = match.url.slice(1);
+  useEffect(() => {
+    const { category, transactionId } = match.params;
+    const data = props[category] || [];
+    const editTransaction = data.find(({ id }) => id === Number(transactionId));
+    if (category && transactionId) {
+      // setDataForm({ ...editTransaction });
+      dispatch({ type: 'initialEdit', payload: editTransaction });
+    }
+  }, []);
+  // useEff`ect(() => {
+  //   cardId === "incomes" && console.log('cardId :>> ', cardId);
+  // }, [cardId]);`
 
-    return (
-      <>
-        {location.pathname === `/${cardId}` && (
-          <Section>
-            <Container>
-              <Button cbOnClick={this.handleGoToHome} title={'Go back'} />
-              <h1>{title}</h1>
-              <Form onSubmit={this.handleSubmitTransaction}>
-                {getInputs(this.state, {
-                  handleChange: this.handleChange,
-                  handleClick: this.openCategoriesList,
-                }).map(
-                  ({ title, type, name, value, handleChange, handleClick }) => (
-                    <LableInput
-                      key={name}
-                      title={title}
-                      type={type}
-                      name={name}
-                      value={value}
-                      handleChange={handleChange}
-                      handleClick={handleClick}
-                    />
-                  ),
-                )}
-              </Form>
-            </Container>
-          </Section>
+  // useEffect(() => {
+  //   i+=1;
+  // }, [dataForm.summ])
+
+  return (
+    <>
+      {location.pathname === `/${cardId}` && (
+        <Section>
+          <Container>
+            <Button cbOnClick={handleGoToHome} title={'Go back'} />
+            <h1>{title}</h1>
+            <Form onSubmit={handleSubmitTransaction}>
+              {getInputs(stateForm, {
+                handleChange: handleChange,
+                handleClick: openCategoriesList,
+              }).map(
+                ({ title, type, name, value, handleChange, handleClick }) => (
+                  <LableInput
+                    key={name}
+                    title={title}
+                    type={type}
+                    name={name}
+                    value={value}
+                    handleChange={handleChange}
+                    handleClick={handleClick}
+                  />
+                ),
+              )}
+            </Form>
+          </Container>
+        </Section>
+      )}
+      <Route
+        path={`${match.path}/category`}
+        render={props => (
+          <CategoriesList
+            {...props}
+            handleGoBack={handleGoBack}
+            onCategoryClick={onSetCategory}
+            categoriesList={props.cardId === 'costs' ? costsList : incomesList}
+          />
         )}
-        <Route
-          path={`${match.path}/category`}
-          render={props => (
-            <CategoriesList
-              {...props}
-              handleGoBack={this.handleGoBack}
-              onCategoryClick={this.onSetCategory}
-              categoriesList={
-                this.props.cardId === 'costs' ? costsList : incomesList
-              }
-            />
-          )}
-        />
-      </>
-    );
-  }
-}
+      />
+    </>
+  );
+};
 
 const mapStateToProps = store => ({
   incomes: store.transactions.incomes,
