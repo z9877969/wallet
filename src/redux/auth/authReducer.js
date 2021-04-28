@@ -20,7 +20,6 @@ const authReducer = createReducer(initialState, {
     isAuth: true,
   }),
   [registerSuccess]: (_, { payload }) => {
-    console.log('payload :>> ', payload);
     return {
       user: {
         email: payload.email,
