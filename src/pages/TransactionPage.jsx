@@ -1,7 +1,7 @@
 import { Component, useEffect, useReducer, useState } from 'react';
 import moment from 'moment';
 import { Route, useHistory, useLocation, useRouteMatch } from 'react-router';
-import { connect } from 'react-redux';
+import { connect, useDispatch, useSelector } from 'react-redux';
 import Button from '../components/share/Button';
 import Form from '../components/share/Form';
 import LableInput from '../components/share/LableInput';
@@ -54,15 +54,9 @@ const TransactionPage = props => {
     editCosts,
     title,
   } = props;
+  const dispatch = useDispatch();
+  const { incomes, costs } = useSelector(state => state.transactions);
   const cardId = match.url.slice(1);
-
-  // const matchHook = useRouteMatch();
-  // const locationHook = useLocation();
-  // const historyHook = useHistory();
-
-  // console.log('matchHook :>> ', matchHook);
-  // console.log('locationHook :>> ', locationHook);
-  // console.log('historyHook :>> ', historyHook);
 
   const initialState = {
     date: moment().format('YYYY-MM-DD'),
@@ -77,7 +71,7 @@ const TransactionPage = props => {
   };
 
   // const [dataForm, setDataForm] = useState(initialState);
-  const [stateForm, dispatch] = useReducer(reducer, initialState);
+  const [stateForm, setDispatch] = useReducer(reducer, initialState);
 
   const handleSubmitTransaction = e => {
     const { category, transactionId } = match.params;
@@ -97,7 +91,7 @@ const TransactionPage = props => {
   const handleChange = e => {
     const { name, value } = e.target;
     // setDataForm({ ...dataForm, [name]: value });
-    dispatch({ type: name, payload: value });
+    setDispatch({ type: name, payload: value });
   };
 
   const openCategoriesList = () => {
@@ -110,7 +104,7 @@ const TransactionPage = props => {
 
   const onSetCategory = opts => {
     // setDataForm({ ...dataForm, category: opts });
-    dispatch({ type: 'category', payload: opts });
+    setDispatch({ type: 'category', payload: opts });
     handleGoBack();
   };
 
@@ -124,20 +118,16 @@ const TransactionPage = props => {
 
   useEffect(() => {
     const { category, transactionId } = match.params;
-    const data = props[category] || [];
-    const editTransaction = data.find(({ id }) => id === Number(transactionId));
+    const data =
+      (category === 'incomes' && incomes) ||
+      (category === 'costs' && costs) ||
+      [];
+    const editTransaction = data.find(({ id }) => id === transactionId);
     if (category && transactionId) {
       // setDataForm({ ...editTransaction });
-      dispatch({ type: 'initialEdit', payload: editTransaction });
+      setDispatch({ type: 'initialEdit', payload: editTransaction });
     }
   }, []);
-  // useEff`ect(() => {
-  //   cardId === "incomes" && console.log('cardId :>> ', cardId);
-  // }, [cardId]);`
-
-  // useEffect(() => {
-  //   i+=1;
-  // }, [dataForm.summ])
 
   return (
     <>

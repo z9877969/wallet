@@ -58,4 +58,37 @@ const addTransaction = ({ data, localId, transactionType, idToken }) => {
     .catch(e => e);
 };
 
-export { signIn, signUp, addTransaction, getTransactionsApi };
+const getCategoriesApi = ({ userId, idToken }) => {
+  return axios
+    .get(`/users/${userId}/categories.json`)
+    .then(({ data }) => {
+      const { costs, incomes } = data;
+      const transformDataToArr = data =>
+        Object.entries(data).map(([id, data]) => ({ id, ...data }));
+      const costsToArr = transformDataToArr(costs || []);
+      const incomesToArr = transformDataToArr(incomes || []);
+      return { incomes: incomesToArr, costs: costsToArr };
+    })
+    .catch(e => e);
+};
+
+const addCategory = ({ data, localId, transactionType, idToken }) => {
+  return axios
+    .post(
+      `/users/${localId}/categories/${transactionType}.json?auth=${idToken}`,
+      data,
+    )
+    .then(({ data: { name: id } }) => {
+      return { ...data, id };
+    })
+    .catch(e => e);
+};
+
+export {
+  signIn,
+  signUp,
+  addTransaction,
+  getTransactionsApi,
+  getCategoriesApi,
+  addCategory,
+};
