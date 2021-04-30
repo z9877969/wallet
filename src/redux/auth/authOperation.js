@@ -1,10 +1,13 @@
 import axios from 'axios';
 
-import { signUp, signIn } from '../../services/firebaseApi';
+import { signUp, signIn, refreshTokenApi } from '../../services/firebaseApi';
 import {
   loginError,
   loginRequest,
   loginSuccess,
+  refreshError,
+  refreshRequest,
+  refreshSuccess,
   registerError,
   registerRequest,
   registerSuccess,
@@ -15,11 +18,10 @@ const userRegister = dataPost => async dispatch => {
 
   try {
     const data = await signUp(dataPost);
-    
+
     dispatch(registerSuccess(data));
   } catch (e) {
-    dispatch(registerError(e.message));
-    throw e;
+    dispatch(registerError({ message: e.message, status: e.status }));
   }
 };
 
@@ -28,7 +30,17 @@ const userLogin = data => dispatch => {
 
   signIn(data)
     .then(data => dispatch(loginSuccess(data)))
-    .catch(e => dispatch(loginError(e.message)));
+    .catch(e => dispatch(loginError({ message: e.message, status: e.status })));
 };
 
-export { userRegister, userLogin };
+const userRefresh = () => (dispatch, getState) => {
+  const { refreshToken } = getState().auth.user;
+  dispatch(refreshRequest());
+  refreshTokenApi(refreshToken)
+    .then(data => dispatch(refreshSuccess(data)))
+    .catch(e =>
+      dispatch(refreshError({ message: e.message, status: e.status })),
+    );
+};
+
+export { userRegister, userLogin, userRefresh };

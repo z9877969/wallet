@@ -12,3 +12,7 @@ export const logoutError = createAction("logoutError");
 export const registerRequest = createAction("registerRequest");
 export const registerSuccess = createAction("registerSuccess");
 export const registerError = createAction("registerError");
+
+export const refreshRequest = createAction("refreshRequest");
+export const refreshSuccess = createAction("refreshSuccess");
+export const refreshError = createAction("refreshError");

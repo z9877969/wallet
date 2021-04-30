@@ -4,6 +4,7 @@ const dbConst = {
   authKey: 'AIzaSyCRFI_dZqdUgbia23ytk0ieVoSex3J7HCY',
   authUrl: 'https://identitytoolkit.googleapis.com/v1/',
   dbUrl: 'https://careful-ensign-297412-default-rtdb.firebaseio.com/',
+  refreshUrl: 'https://securetoken.googleapis.com/v1/token',
 };
 
 const setRequestOptions = (baseUrl, params) => {
@@ -18,7 +19,9 @@ const signUp = data => {
     .then(({ data }) => {
       return data;
     })
-    .catch(e => e);
+    .catch(e => {
+      throw e;
+    });
 };
 
 const signIn = data => {
@@ -28,7 +31,27 @@ const signIn = data => {
     .then(({ data }) => {
       return data;
     })
-    .catch(e => e);
+    .catch(e => {
+      throw e;
+    });
+};
+
+const refreshTokenApi = REFRESH_TOKEN => {
+  setRequestOptions(dbConst.refreshUrl, {
+    key: dbConst.authKey,
+    grant_type: 'refresh_token',
+    refresh_token: REFRESH_TOKEN,
+  });
+  return axios
+    .post()
+    .then(({ data: { user_id, access_token, refresh_token } }) => ({
+      localId: user_id,
+      idToken: access_token,
+      refreshToken: refresh_token,
+    }))
+    .catch(e => {
+      throw e;
+    });
 };
 
 const getTransactionsApi = ({ userId, idToken }) => {
@@ -43,22 +66,42 @@ const getTransactionsApi = ({ userId, idToken }) => {
       const incomesToArr = transformDataToArr(incomes || []);
       return { incomes: incomesToArr, costs: costsToArr };
     })
-    .catch(e => e);
+    .catch(e => {
+      throw e;
+    });
 };
 
 const addTransaction = ({ data, localId, transactionType, idToken }) => {
   return axios
-    .post(
-      `/users/${localId}/transactions/${transactionType}.json?auth=${idToken}`,
-      data,
-    )
+    .post(`/users/${localId}/transactions/${transactionType}.json`, data)
     .then(({ data: { name: id } }) => {
       return { ...data, id };
     })
-    .catch(e => e);
+    .catch(e => {
+      throw e;
+    });
 };
 
-const getCategoriesApi = ({ userId, idToken }) => {
+const editTransaction = ({
+  data,
+  localId,
+  transactionType,
+  id: transactionId,
+}) => {
+  return axios
+    .patch(
+      `/users/${localId}/transactions/${transactionType}/${transactionId}.json`,
+      data,
+    )
+    .then(({ data }) => {
+      return { ...data, id: transactionId };
+    })
+    .catch(e => {
+      throw e;
+    });
+};
+
+const getCategoriesApi = ({ userId }) => {
   return axios
     .get(`/users/${userId}/categories.json`)
     .then(({ data }) => {
@@ -69,7 +112,9 @@ const getCategoriesApi = ({ userId, idToken }) => {
       const incomesToArr = transformDataToArr(incomes || []);
       return { incomes: incomesToArr, costs: costsToArr };
     })
-    .catch(e => e);
+    .catch(e => {
+      throw e;
+    });
 };
 
 const addCategory = ({ data, localId, transactionType, idToken }) => {
@@ -81,14 +126,18 @@ const addCategory = ({ data, localId, transactionType, idToken }) => {
     .then(({ data: { name: id } }) => {
       return { ...data, id };
     })
-    .catch(e => e);
+    .catch(e => {
+      throw e;
+    });
 };
 
 export {
   signIn,
   signUp,
+  refreshTokenApi,
   addTransaction,
   getTransactionsApi,
+  editTransaction,
   getCategoriesApi,
   addCategory,
 };

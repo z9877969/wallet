@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { addCategory, getCategoriesApi } from '../../services/firebaseApi';
 import {
   addCostsCatError,
   addCostsCatRequest,
@@ -15,44 +16,68 @@ import {
   isCategoriesNull,
 } from './categoriesAction';
 
-export const getIncomesCat = () => dispatch => {
+export const getCategories = () => (dispatch, getState) => {
+  const { localId: userId } = getState().auth.user;
   dispatch(getIncomesCatRequest());
 
-  axios
-    .get('/incomes-cat')
-    .then(({ data }) => {
-      dispatch(getIncomesCatSuccess(data));
-      !data.length && dispatch(isCategoriesNull('incomes'));
+  // axios
+  //   .get('/incomes-cat')
+  getCategoriesApi({ userId })
+    .then(({ incomes, costs }) => {
+      dispatch(getIncomesCatSuccess(incomes));
+      !incomes.length && dispatch(isCategoriesNull('incomes'));
+      dispatch(getCostsCatSuccess(costs));
+      !costs.length && dispatch(isCategoriesNull('costs'));
     })
-    .catch(err => dispatch(getIncomesCatError(err.message)));
+    .catch(err =>
+      dispatch(
+        getIncomesCatError({ message: err.message, status: err.status }),
+      ),
+    );
 };
 
-export const getCostsCat = () => dispatch => {
-  dispatch(getCostsCatRequest());
+// export const getCostsCat = () => dispatch => {
+//   dispatch(getCostsCatRequest());
 
-  axios
-    .get('/costs-cat')
-    .then(({ data }) => {
-      dispatch(getCostsCatSuccess(data));
-      !data.length && dispatch(isCategoriesNull('costs'));
-    })
-    .catch(err => dispatch(getCostsCatError(err.message)));
-};
+//   axios
+//     .get('/costs-cat')
+//     .then(({ data }) => {
+//       dispatch(getCostsCatSuccess(data));
+//       !data.length && dispatch(isCategoriesNull('costs'));
+//     })
+//     .catch(err => dispatch(getCostsCatError(err.message)));
+// };
 
-export const addIncomesCat = data => dispatch => {
+export const addIncomesCat = data => (dispatch, getState) => {
+  const { localId, idToken } = getState().auth.user;
   dispatch(addIncomesCatRequest());
 
-  axios
-    .post('/incomes-cat', data)
-    .then(({ data }) => dispatch(addIncomesCatSuccess(data)))
-    .catch(err => dispatch(addIncomesCatError(err.message)));
+  addCategory({
+    data,
+    localId,
+    transactionType: 'incomes',
+    idToken,
+  })
+    .then(data => dispatch(addIncomesCatSuccess(data)))
+    .catch(err =>
+      dispatch(
+        addIncomesCatError({ message: err.message, status: err.status }),
+      ),
+    );
 };
 
-export const addCostsCat = data => dispatch => {
+export const addCostsCat = data => (dispatch, getState) => {
+  const { localId, idToken } = getState().auth.user;
   dispatch(addCostsCatRequest());
 
-  axios
-    .post('/costs-cat', data)
-    .then(({ data }) => dispatch(addCostsCatSuccess(data)))
-    .catch(err => dispatch(addCostsCatError(err.message)));
+  addCategory({
+    data,
+    localId,
+    transactionType: 'incomes',
+    idToken,
+  })
+    .then(data => dispatch(addCostsCatSuccess(data)))
+    .catch(err =>
+      dispatch(addCostsCatError({ message: err.message, status: err.status })),
+    );
 };

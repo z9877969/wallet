@@ -15,13 +15,10 @@ export const addCostsRequest = createAction('addCostsRequest');
 export const addCostsSuccess = createAction('addCostsSuccess');
 export const addCostsError = createAction('addCostsError');
 
-export const getIncomesRequest = createAction('getIncomesRequest');
+export const getTransactionsRequest = createAction('getTransactionsRequest');
 export const getIncomesSuccess = createAction('getIncomesSuccess');
-export const getIncomesError = createAction('getIncomesError');
-
-export const getCostsRequest = createAction('getCostsRequest');
 export const getCostsSuccess = createAction('getCostsSuccess');
-export const getCostsError = createAction('getCostsError');
+export const getTransactionsError = createAction('getTransactionsError');
 
 export const removeCostsRequest = createAction('removeCostsRequest');
 export const removeCostsSuccess = createAction('removeCostsSuccess');

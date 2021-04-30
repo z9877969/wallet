@@ -24,15 +24,19 @@ import {
   editIncomesRequest,
   editIncomesSuccess,
   editIncomesError,
+  getTransactionsRequest,
+  getTransactionsError,
 } from './transactionsAction';
 
-import { getTransactionsApi, addTransaction } from '../../services/firebaseApi';
+import {
+  getTransactionsApi,
+  addTransaction,
+  editTransaction,
+} from '../../services/firebaseApi';
 
 export const addCosts = data => (dispatch, getState) => {
   const { localId, idToken } = getState().auth.user;
-
   dispatch(addCostsRequest());
-
   addTransaction({
     data,
     localId,
@@ -40,13 +44,14 @@ export const addCosts = data => (dispatch, getState) => {
     idToken,
   })
     .then(data => dispatch(addCostsSuccess(data)))
-    .catch(err => dispatch(addCostsError(err.message)));
+    .catch(err =>
+      dispatch(addCostsError({ message: err.message, status: err.status })),
+    );
 };
 
 export const addIncomes = data => (dispatch, getState) => {
   const { localId, idToken } = getState().auth.user;
   dispatch(addIncomesRequest());
-
   addTransaction({
     data,
     localId,
@@ -54,71 +59,75 @@ export const addIncomes = data => (dispatch, getState) => {
     idToken,
   })
     .then(data => dispatch(addIncomesSuccess(data)))
-    .catch(err => dispatch(addIncomesError(err.message)));
-};
-
-export const getIncomes = () => dispatch => {
-  dispatch(getIncomesRequest());
-
-  axios
-    .get('/incomes')
-    .then(({ data }) => dispatch(getIncomesSuccess(data)))
-    .catch(err => dispatch(getIncomesError(err.message)));
-};
-
-export const getCosts = () => dispatch => {
-  dispatch(getCostsRequest());
-
-  axios
-    .get('/costs')
-    .then(({ data }) => dispatch(getCostsSuccess(data)))
-    .catch(err => dispatch(getCostsError(err.message)));
+    .catch(err =>
+      dispatch(addIncomesError({ message: err.message, status: err.status })),
+    );
 };
 
 export const getTransactions = () => (dispatch, getState) => {
-  dispatch(getCostsRequest());
   const { localId, idToken } = getState().auth.user;
+  dispatch(getTransactionsRequest());
   getTransactionsApi({ userId: localId, idToken })
     .then(data => {
       const { costs = [], incomes = [] } = data;
       dispatch(getCostsSuccess(costs));
       dispatch(getIncomesSuccess(incomes));
     })
-    .catch(e => dispatch(getCostsError(e)));
+    .catch(err =>
+      dispatch(getTransactionsError({ message: err.message, status: err.status })),
+    );
 };
 
 export const removeCosts = id => dispatch => {
   dispatch(removeCostsRequest());
-
   axios
     .delete(`/costs/${id}`)
     .then(() => dispatch(removeCostsSuccess(id)))
-    .catch(err => dispatch(removeCostsError(err.message)));
+    .catch(err =>
+      dispatch(removeCostsError({ message: err.message, status: err.status })),
+    );
 };
 
 export const removeIncomes = id => dispatch => {
   dispatch(removeIncomesRequest());
-
   axios
     .delete(`/incomes/${id}`)
     .then(() => dispatch(removeIncomesSuccess(id)))
-    .catch(err => dispatch(removeIncomesError(err.message)));
+    .catch(err =>
+      dispatch(
+        removeIncomesError({ message: err.message, status: err.status }),
+      ),
+    );
 };
 
-export const editCosts = (id, data) => dispatch => {
+export const editCosts = (id, data) => (dispatch, getState) => {
+  const { localId, idToken } = getState().auth.user;
   dispatch(editCostsRequest());
-
-  axios
-    .patch(`/costs/${id}`, data)
-    .then(({ data }) => dispatch(editCostsSuccess(data)))
-    .catch(err => dispatch(editCostsError(err.message)));
+  editTransaction({
+    data,
+    localId,
+    transactionType: 'costs',
+    idToken,
+    id,
+  })
+    .then(data => dispatch(editCostsSuccess(data)))
+    .catch(err =>
+      dispatch(editCostsError({ message: err.message, status: err.status })),
+    );
 };
 
-export const editIncomes = (id, data) => dispatch => {
+export const editIncomes = (id, data) => (dispatch, getState) => {
+  const { localId, idToken } = getState().auth.user;
   dispatch(editIncomesRequest());
-
-  axios
-    .patch(`/incomes/${id}`, data)
-    .then(({ data }) => dispatch(editIncomesSuccess(data)))
-    .catch(err => dispatch(editIncomesError(err.message)));
+  editTransaction({
+    data,
+    localId,
+    transactionType: 'costs',
+    idToken,
+    id,
+  })
+    .then(data => dispatch(editIncomesSuccess(data)))
+    .catch(err =>
+      dispatch(editIncomesError({ message: err.message, status: err.status })),
+    );
 };

@@ -2,8 +2,9 @@ import { Component, useEffect, useReducer, useState } from 'react';
 import moment from 'moment';
 import { Route, useHistory, useLocation, useRouteMatch } from 'react-router';
 import { connect, useDispatch, useSelector } from 'react-redux';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 import Button from '../components/share/Button';
-import Form from '../components/share/Form';
 import LableInput from '../components/share/LableInput';
 import CategoriesList from '../components/CategoriesList';
 import Section from '../components/share/Section/Section';
@@ -16,6 +17,8 @@ import {
   editCosts,
   editIncomes,
 } from '../redux/transactions/transactionsOperations';
+import getFormOpts from '../assets/options/transactionForm';
+import FormTmp from '../components/FormTmp/FormTmp';
 
 const { categoriesList: costsList } = costsOpts;
 const { categoriesList: incomesList } = incomesOpts;
@@ -44,21 +47,12 @@ const reducer = (state, action) => {
 };
 
 const TransactionPage = props => {
-  const {
-    match,
-    location,
-    history,
-    addCosts,
-    addIncomes,
-    editIncomes,
-    editCosts,
-    title,
-  } = props;
+  const { match, location, history, title } = props;
   const dispatch = useDispatch();
   const { incomes, costs } = useSelector(state => state.transactions);
   const cardId = match.url.slice(1);
 
-  const initialState = {
+  const initialStateForm = {
     date: moment().format('YYYY-MM-DD'),
     time: moment().format('HH:mm'),
     category:
@@ -70,28 +64,26 @@ const TransactionPage = props => {
     comment: '',
   };
 
-  // const [dataForm, setDataForm] = useState(initialState);
-  const [stateForm, setDispatch] = useReducer(reducer, initialState);
+  const [stateForm, dispatchStateForm] = useReducer(reducer, initialStateForm);
 
   const handleSubmitTransaction = e => {
     const { category, transactionId } = match.params;
     e.preventDefault();
 
     if (category && transactionId) {
-      category === 'incomes' && editIncomes(transactionId, stateForm);
-      category === 'costs' && editCosts(transactionId, stateForm);
+      category === 'incomes' && dispatch(editIncomes(transactionId, stateForm));
+      category === 'costs' && dispatch(editCosts(transactionId, stateForm));
       handleGoToHome();
     }
 
-    cardId === 'incomes' && addIncomes(stateForm);
-    cardId === 'costs' && addCosts(stateForm);
+    cardId === 'incomes' && dispatch(addIncomes(stateForm));
+    cardId === 'costs' && dispatch(addCosts(stateForm));
     handleGoToHome();
   };
 
   const handleChange = e => {
     const { name, value } = e.target;
-    // setDataForm({ ...dataForm, [name]: value });
-    setDispatch({ type: name, payload: value });
+    dispatchStateForm({ type: name, payload: value });
   };
 
   const openCategoriesList = () => {
@@ -103,8 +95,7 @@ const TransactionPage = props => {
   };
 
   const onSetCategory = opts => {
-    // setDataForm({ ...dataForm, category: opts });
-    setDispatch({ type: 'category', payload: opts });
+    dispatchStateForm({ type: 'category', payload: opts });
     handleGoBack();
   };
 
@@ -124,10 +115,12 @@ const TransactionPage = props => {
       [];
     const editTransaction = data.find(({ id }) => id === transactionId);
     if (category && transactionId) {
-      // setDataForm({ ...editTransaction });
-      setDispatch({ type: 'initialEdit', payload: editTransaction });
+      dispatchStateForm({ type: 'initialEdit', payload: editTransaction });
     }
   }, []);
+
+  const [date, setDate] = useState(new Date());
+  // console.log('date :>> ', date);
 
   return (
     <>
@@ -136,24 +129,21 @@ const TransactionPage = props => {
           <Container>
             <Button cbOnClick={handleGoToHome} title={'Go back'} />
             <h1>{title}</h1>
-            <Form onSubmit={handleSubmitTransaction}>
-              {getInputs(stateForm, {
-                handleChange: handleChange,
-                handleClick: openCategoriesList,
-              }).map(
-                ({ title, type, name, value, handleChange, handleClick }) => (
-                  <LableInput
-                    key={name}
-                    title={title}
-                    type={type}
-                    name={name}
-                    value={value}
-                    handleChange={handleChange}
-                    handleClick={handleClick}
-                  />
-                ),
-              )}
-            </Form>
+            <div className="datePicker">
+              <DatePicker
+                selected={date}
+                onChange={date => setDate(date)}
+                dateFormat="dd-MM-yy"
+                className="date"
+              />
+            </div>
+
+            <FormTmp
+              options={getFormOpts(stateForm)}
+              handleChange={handleChange}
+              handleClick={openCategoriesList}
+              onSubmit={handleSubmitTransaction}
+            />
           </Container>
         </Section>
       )}
@@ -185,50 +175,3 @@ const mapDispatchToProps = {
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(TransactionPage);
-
-function getInputs(state, cbs) {
-  return [
-    {
-      title: 'День',
-      type: 'date',
-      name: 'date',
-      value: state.date,
-      handleChange: cbs['handleChange'],
-    },
-    {
-      title: 'Время',
-      type: 'time',
-      name: 'time',
-      value: state.time,
-      handleChange: cbs['handleChange'],
-    },
-    {
-      title: 'Категории',
-      type: 'button',
-      name: 'category',
-      value: state.category.name,
-      handleClick: cbs['handleClick'],
-    },
-    {
-      title: 'Сумма',
-      type: 'text',
-      name: 'summ',
-      value: state.summ,
-      handleChange: cbs['handleChange'],
-    },
-    {
-      title: 'Валюта',
-      type: 'text',
-      name: 'currency',
-      value: state.currency,
-      handleChange: cbs['handleChange'],
-    },
-    {
-      title: 'Комментарий',
-      type: 'text',
-      name: 'comment',
-      value: state.comment,
-      handleChange: cbs['handleChange'],
-    },
-  ];
-}

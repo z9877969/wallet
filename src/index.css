@@ -25,3 +25,23 @@ code {
 button {
   background-color: inherit;
 }
+
+.date {
+  background: red;
+  color: green;
+  font-size: 20px;
+  border: 5px solid blue;
+  width: 100px;
+}
+
+.react-datepicker__month-container {
+  border: 2px solid red;
+}
+
+.react-datepicker__header {
+  background-color: blue;
+}
+
+.react-datepicker__month {
+  background: yellow;
+}

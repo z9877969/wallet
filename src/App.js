@@ -16,25 +16,35 @@ import {
 } from './redux/transactions/transactionsOperations';
 import { getIsAuth, getIsToken } from './redux/auth/authSelector';
 import { logoutSuccess } from './redux/auth/authAction';
+import { userRefresh } from './redux/auth/authOperation';
+// import DatePicker from './components/share/DatePicker/DatePicker';
+// import WithFormik from './components/WithFormik/WithFormik';
 
 const App = () => {
   const dispatch = useDispatch();
   const isAuth = useSelector(getIsToken);
+  // const isAuth = true;
+  const error = useSelector(state => state.error);
 
   const handleLogout = () => dispatch(logoutSuccess());
 
   useEffect(() => {
     if (isAuth) {
-      dispatch(getTransactions())
-      // dispatch(getIncomes());
-      // dispatch(getCosts());
+      dispatch(getTransactions());
     }
   }, [isAuth]);
 
+  useEffect(() => {
+    error?.message.includes('code 401')
+      ? dispatch(userRefresh())
+      : error && dispatch(logoutSuccess());
+  }, [error?.message]);
+
   return (
     <>
+    {/* <WithFormik /> */}
+      {/* <DatePicker /> */}
       <AuthHeader isAuth={isAuth} handleLogout={handleLogout} />
-      {/* <AuthHeader {...{ isAuth, handleLogout }} /> */}
       {!isAuth ? (
         <>
           <Switch>

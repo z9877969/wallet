@@ -1,5 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { registerError } from './auth/authAction';
+import { loginError, refreshError, registerError } from './auth/authAction';
 import {
   addCostsCatError,
   addIncomesCatError,
@@ -12,16 +12,19 @@ import {
   editCostsError,
   editIncomesError,
   getCostsError,
+  getCostsRequest,
   getIncomesError,
+  getTransactionsError,
+  getTransactionsRequest,
   removeCostsError,
   removeIncomesError,
 } from './transactions/transactionsAction';
 
 const errorReducer = createReducer(null, {
+  [getTransactionsRequest]: () => null,
   [addIncomesError]: (_, { payload }) => payload,
   [addCostsError]: (_, { payload }) => payload,
-  [getIncomesError]: (_, { payload }) => payload,
-  [getCostsError]: (_, { payload }) => payload,
+  [getTransactionsError]: (_, { payload }) => payload,
   [removeCostsError]: (_, { payload }) => payload,
   [removeIncomesError]: (_, { payload }) => payload,
   [editIncomesError]: (_, { payload }) => payload,
@@ -31,6 +34,8 @@ const errorReducer = createReducer(null, {
   [addCostsCatError]: (_, { payload }) => payload,
   [addIncomesCatError]: (_, { payload }) => payload,
   [registerError]: (_, { payload }) => payload,
+  [loginError]: (_, { payload }) => payload,
+  [refreshError]: (_, { payload }) => payload,
 });
 
 export default errorReducer;

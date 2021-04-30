@@ -1,11 +1,12 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { loginSuccess, logoutSuccess, registerSuccess } from './authAction';
+import { loginSuccess, logoutSuccess, refreshSuccess, registerSuccess } from './authAction';
 
 const initialState = {
   user: {
     email: '',
     idToken: '',
     localId: '',
+    refreshToken: '',
   },
   isAuth: false,
 };
@@ -16,6 +17,7 @@ const authReducer = createReducer(initialState, {
       email: payload.email,
       idToken: payload.idToken,
       localId: payload.localId,
+      refreshToken: payload.refreshToken
     },
     isAuth: true,
   }),
@@ -25,9 +27,21 @@ const authReducer = createReducer(initialState, {
         email: payload.email,
         idToken: payload.idToken,
         localId: payload.localId,
+        refreshToken: payload.refreshToken
       },
       isAuth: true,
     };
+  },
+  [refreshSuccess]: (state, {payload}) => {
+    return {
+      user: {
+        email: state.user.email,
+        idToken: payload.idToken,
+        localId: payload.localId,
+        refreshToken: payload.refreshToken
+      },
+      isAuth: true,
+    }
   },
   [logoutSuccess]: () => initialState,
 });

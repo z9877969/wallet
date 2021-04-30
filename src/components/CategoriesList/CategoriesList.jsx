@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { Route } from 'react-router';
-import { useDispatch, useSelector } from 'react-redux';
+import { connect, useDispatch, useSelector } from 'react-redux';
 import Button from '../share/Button';
 import Container from '../share/Container/Container';
 import Item from '../share/Item';
@@ -11,6 +11,7 @@ import css from './CategoriesList.module.css';
 import {
   addCostsCat,
   addIncomesCat,
+  getCategories,
   getCostsCat,
   getIncomesCat,
 } from '../../redux/categories/categoriesOperation';
@@ -18,7 +19,7 @@ import { resetCategoriesNull } from '../../redux/categories/categoriesAction';
 import { categoriesList as catListIncomes } from '../../db/incomes.json';
 import { categoriesList as catListCosts } from '../../db/costs.json';
 
-const CategoriesList = ({ onCategoryClick, match, history, location }) => {
+const CategoriesList = ({ onCategoryClick, match, history, location}) => {
   const dispatch = useDispatch();
   const { url, path } = match;
   const { push } = history;
@@ -33,6 +34,7 @@ const CategoriesList = ({ onCategoryClick, match, history, location }) => {
   const categoriesList = categories[category] || [];
 
   const handleAddCategory = () => {
+    dispatch(addIncomesCat("data"))
     history.push({
       pathname: `${url}/add`,
       state: {
@@ -47,8 +49,8 @@ const CategoriesList = ({ onCategoryClick, match, history, location }) => {
 
   useEffect(() => {
     const { incomes, costs } = categories;
-    !incomes?.length && category === 'incomes' && dispatch(getIncomesCat());
-    !costs?.length && category === 'costs' && dispatch(getCostsCat());
+    (!incomes?.length && category === 'incomes' || !costs?.length && category === 'costs') && dispatch(getCategories());
+    // !costs?.length && category === 'costs' && dispatch(getCostsCat());
   }, []);
 
   useEffect(() => {

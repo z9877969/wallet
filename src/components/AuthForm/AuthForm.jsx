@@ -1,9 +1,11 @@
 import { useState, useReducer } from 'react';
 import { NavLink } from 'react-router-dom';
 import Container from '../share/Container/Container';
-import Form from '../share/Form';
+// import Form from '../share/Form';
+import Form from '../FormTmp/FormTmp';
 import LableInput from '../share/LableInput';
 import Section from '../share/Section/Section';
+import loginForm from '../../assets/options/loginForm';
 
 const initialFormState = {
   login: '',
@@ -37,11 +39,28 @@ const AuthForm = ({ handleSubmit, path }) => {
     dispatch({ type: initialFormState });
   };
 
+  const options = loginForm.map(el => ({
+    ...el, value: state[el.name]
+  }))
+
   return (
     <Section>
       <Container>
-        <Form onSubmit={onSubmit}>
-          <LableInput
+        <Form
+          options={options}
+          handleChange={handleChange}
+          onSubmit={onSubmit}
+        />
+        {/* <Form onSubmit={onSubmit}> */}
+        {/* {loginForm.map(el => (
+            <LableInput
+              title={el.title}
+              name={el.name}
+              value={state[el.name]}
+              handleChange={handleChange}
+            />
+          ))} */}
+        {/* <LableInput
             title="Login"
             name="login"
             value={login}
@@ -52,8 +71,8 @@ const AuthForm = ({ handleSubmit, path }) => {
             name="password"
             value={password}
             handleChange={handleChange}
-          />
-        </Form>
+          /> */}
+        {/* </Form> */}
         {path === '/login' && <NavLink to="/register">SignUp</NavLink>}
         {path === '/register' && <NavLink to="/login">LogIn</NavLink>}
       </Container>
