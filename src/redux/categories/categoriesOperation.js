@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { addCategory, getCategoriesApi } from '../../services/firebaseApi';
 import {
   addCostsCatError,
@@ -7,49 +6,34 @@ import {
   addIncomesCatError,
   addIncomesCatRequest,
   addIncomesCatSuccess,
-  getCostsCatError,
-  getCostsCatRequest,
+  getCategoriesError,
+  getCategoriesRequest,
   getCostsCatSuccess,
-  getIncomesCatError,
-  getIncomesCatRequest,
   getIncomesCatSuccess,
-  isCategoriesNull,
+  isCostsCatNull,
+  isIncomesCatNull,
 } from './categoriesAction';
 
 export const getCategories = () => (dispatch, getState) => {
   const { localId: userId } = getState().auth.user;
-  dispatch(getIncomesCatRequest());
+  dispatch(getCategoriesRequest());
 
-  // axios
-  //   .get('/incomes-cat')
   getCategoriesApi({ userId })
     .then(({ incomes, costs }) => {
-      console.log('incomes :>> ', incomes);
-      dispatch(getIncomesCatSuccess(incomes));
-      !incomes.length && dispatch(isCategoriesNull('incomes'));
-      dispatch(getCostsCatSuccess(costs));
-      !costs.length && dispatch(isCategoriesNull('costs'));
+      !incomes.length
+        ? dispatch(isIncomesCatNull('incomes'))
+        : dispatch(getIncomesCatSuccess(incomes));
+
+      !costs.length
+        ? dispatch(isCostsCatNull('costs'))
+        : dispatch(getCostsCatSuccess(costs));
     })
-    .catch(err => {
-      console.log("error");
+    .catch(err =>
       dispatch(
-        getIncomesCatError({ message: err.message, status: err.status }),
-      )
-    }
+        getCategoriesError({ message: err.message, status: err.status }),
+      ),
     );
 };
-
-// export const getCostsCat = () => dispatch => {
-//   dispatch(getCostsCatRequest());
-
-//   axios
-//     .get('/costs-cat')
-//     .then(({ data }) => {
-//       dispatch(getCostsCatSuccess(data));
-//       !data.length && dispatch(isCategoriesNull('costs'));
-//     })
-//     .catch(err => dispatch(getCostsCatError(err.message)));
-// };
 
 export const addIncomesCat = data => (dispatch, getState) => {
   const { localId, idToken } = getState().auth.user;
@@ -58,7 +42,7 @@ export const addIncomesCat = data => (dispatch, getState) => {
   addCategory({
     data,
     localId,
-    transactionType: 'incomes',
+    transactionType: 'costs',
     idToken,
   })
     .then(data => dispatch(addIncomesCatSuccess(data)))

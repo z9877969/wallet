@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { Route } from 'react-router';
-import { connect, useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Button from '../share/Button';
 import Container from '../share/Container/Container';
 import Item from '../share/Item';
@@ -12,21 +12,19 @@ import {
   addCostsCat,
   addIncomesCat,
   getCategories,
-  getCostsCat,
-  getIncomesCat,
 } from '../../redux/categories/categoriesOperation';
 import { resetCategoriesNull } from '../../redux/categories/categoriesAction';
 import { categoriesList as catListIncomes } from '../../db/incomes.json';
 import { categoriesList as catListCosts } from '../../db/costs.json';
 
-const CategoriesList = ({ onCategoryClick, match, history, location}) => {
+const CategoriesList = ({ onCategoryClick, match, history, location }) => {
   const dispatch = useDispatch();
   const { url, path } = match;
   const { push } = history;
   const { state } = location;
 
   const categories = useSelector(state => state.category);
-  const { incomes: isCatIncomes, costs: isCatCosts } = useSelector(
+  const { incomes: isCatIncomesNull, costs: isCatCostsNull } = useSelector(
     state => state.category.isNull,
   );
 
@@ -34,7 +32,7 @@ const CategoriesList = ({ onCategoryClick, match, history, location}) => {
   const categoriesList = categories[category] || [];
 
   const handleAddCategory = () => {
-    dispatch(addIncomesCat("data"))
+    dispatch(addIncomesCat('data'));
     history.push({
       pathname: `${url}/add`,
       state: {
@@ -48,27 +46,22 @@ const CategoriesList = ({ onCategoryClick, match, history, location}) => {
   };
 
   useEffect(() => {
-    const { incomes, costs } = categories;
-    (!incomes?.length && category === 'incomes' || !costs?.length && category === 'costs') && dispatch(getCategories());
-    // !costs?.length && category === 'costs' && dispatch(getCostsCat());
+    !categoriesList.length && dispatch(getCategories());
   }, []);
 
   useEffect(() => {
-    if (isCatIncomes) {
-      catListIncomes.forEach(async data => {
+    isCatIncomesNull &&
+      catListIncomes.forEach(async (data, i) => {
+        i === 0 && dispatch(resetCategoriesNull('incomes'));
         await dispatch(addIncomesCat(data));
       });
-      dispatch(resetCategoriesNull('incomes'));
-    }
-  }, [isCatIncomes]);
-
-  useEffect(() => {
-    console.log('isCatCosts :>> ', isCatCosts);
-    if (isCatCosts) {
-      catListCosts.forEach(async data => await dispatch(addCostsCat(data)));
-      dispatch(resetCategoriesNull('costs'));
-    }
-  }, [isCatCosts]);
+    isCatCostsNull &&
+      category === 'costs' &&
+      catListCosts.forEach(async (data, i) => {
+        i === 0 && dispatch(resetCategoriesNull('costs'));
+        await dispatch(addCostsCat(data));
+      });
+  }, [isCatIncomesNull, isCatCostsNull]);
 
   return (
     <Section>
@@ -90,11 +83,6 @@ const CategoriesList = ({ onCategoryClick, match, history, location}) => {
             );
           })}
         </List>
-        {/* <input
-          className={css.comment}
-          type="text"
-          placeholder="Комментарий..."
-        /> */}
         {location.pathname.split('/').pop() !== 'add' && (
           <Button title="Add Category" cbOnClick={handleAddCategory} />
         )}

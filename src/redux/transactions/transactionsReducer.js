@@ -1,4 +1,5 @@
 import { createReducer, combineReducers } from '@reduxjs/toolkit';
+import { logoutSuccess } from '../auth/authAction';
 import {
   addCostsSuccess,
   addIncomesSuccess,
@@ -31,6 +32,7 @@ const costsReducer = createReducer(initialState.costs, {
     const transactionsFiltered = state.filter(({ id }) => id !== payload.id);
     return [...transactionsFiltered, payload];
   },
+  [logoutSuccess]: () => initialState.costs,
 });
 
 const incomesReducer = createReducer(initialState.incomes, {
@@ -42,6 +44,7 @@ const incomesReducer = createReducer(initialState.incomes, {
     const transactionsFiltered = state.filter(({ id }) => id !== payload.id);
     return [...transactionsFiltered, payload];
   },
+  [logoutSuccess]: () => initialState.incomes,
 });
 
 const transactionListIdReducer = createReducer(initialState.listId, {
@@ -53,6 +56,7 @@ const transactionListIdReducer = createReducer(initialState.listId, {
     setToLS('listId', '');
     return initialState.listId;
   },
+  [logoutSuccess]: () => initialState.listId,
 });
 
 const transactionsReducer = combineReducers({

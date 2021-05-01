@@ -9,16 +9,10 @@ import AuthHeader from './components/AuthHeader/AuthHeader';
 import AuthPage from './pages/AuthPage';
 import costsDb from './db/costs.json';
 import incomesDb from './db/incomes.json';
-import {
-  getCosts,
-  getIncomes,
-  getTransactions,
-} from './redux/transactions/transactionsOperations';
+import { getTransactions } from './redux/transactions/transactionsOperations';
 import { getIsAuth, getIsToken } from './redux/auth/authSelector';
 import { logoutSuccess } from './redux/auth/authAction';
 import { userRefresh } from './redux/auth/authOperation';
-// import DatePicker from './components/share/DatePicker/DatePicker';
-// import WithFormik from './components/WithFormik/WithFormik';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -35,15 +29,12 @@ const App = () => {
   }, [isAuth]);
 
   useEffect(() => {
-    error?.message.includes('code 401')
-      ? dispatch(userRefresh())
-      : error && dispatch(logoutSuccess());
+    error?.message.includes('code 401') && dispatch(userRefresh());
+    // : error && dispatch(logoutSuccess());
   }, [error?.message]);
 
   return (
     <>
-    {/* <WithFormik /> */}
-      {/* <DatePicker /> */}
       <AuthHeader isAuth={isAuth} handleLogout={handleLogout} />
       {!isAuth ? (
         <>

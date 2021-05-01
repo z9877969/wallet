@@ -75,8 +75,6 @@ const TransactionPage = props => {
   //   comment: '',
   // };
 
-  // const [stateForm, dispatchStateForm] = useReducer(reducer, initialStateForm);
-
   // const handleSubmitTransaction = e => {
   //   const { category, transactionId } = match.params;
   //   e.preventDefault();
@@ -92,11 +90,6 @@ const TransactionPage = props => {
   //   handleGoToHome();
   // };
 
-  // const handleChange = e => {
-  //   const { name, value } = e.target;
-  //   dispatchStateForm({ type: name, payload: value });
-  // };
-
   const openCategoriesList = () => {
     const nextLocation = {
       pathname: `${match.url}/category`,
@@ -107,7 +100,7 @@ const TransactionPage = props => {
 
   const onSetCategory = opts => {
     setInitForm(prev => ({ ...prev, category: opts }));
-    // handleGoBack();
+    handleGoBack();
   };
 
   const handleGoBack = () => {
@@ -140,7 +133,6 @@ const TransactionPage = props => {
 
             <FormTmp
               options={getFormOpts(initForm)}
-              // handleChange={handleChange}
               handleClick={openCategoriesList}
               // onSubmit={handleSubmitTransaction}
             />

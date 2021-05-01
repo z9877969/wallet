@@ -8,17 +8,13 @@ import {
 import {
   addCostsCatError,
   addIncomesCatError,
-  getCostsCatError,
-  getIncomesCatError,
+  getCategoriesError,
 } from './categories/categoriesAction';
 import {
   addCostsError,
   addIncomesError,
   editCostsError,
   editIncomesError,
-  getCostsError,
-  getCostsRequest,
-  getIncomesError,
   getTransactionsError,
   getTransactionsRequest,
   removeCostsError,
@@ -35,8 +31,7 @@ const errorReducer = createReducer(null, {
   [removeIncomesError]: (_, { payload }) => payload,
   [editIncomesError]: (_, { payload }) => payload,
   [editCostsError]: (_, { payload }) => payload,
-  [getIncomesCatError]: (_, { payload }) => payload,
-  [getCostsCatError]: (_, { payload }) => payload,
+  [getCategoriesError]: (_, { payload }) => payload,
   [addCostsCatError]: (_, { payload }) => payload,
   [addIncomesCatError]: (_, { payload }) => payload,
   [registerError]: (_, { payload }) => payload,

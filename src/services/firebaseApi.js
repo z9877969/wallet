@@ -109,8 +109,8 @@ const getCategoriesApi = ({ userId }) => {
       const { costs, incomes } = data;
       const transformDataToArr = data =>
         Object.entries(data).map(([id, data]) => ({ id, ...data }));
-      const costsToArr = transformDataToArr(costs || []);
-      const incomesToArr = transformDataToArr(incomes || []);
+      const costsToArr = costs ? transformDataToArr(costs) : [];
+      const incomesToArr = incomes ? transformDataToArr(incomes) : [];
       return { incomes: incomesToArr, costs: costsToArr };
     })
     .catch(e => {
