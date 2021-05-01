@@ -15,15 +15,16 @@ const FormTmp = ({
         <>
           <LableInput
             key={el.name}
-            id={el.id}
+            id={el.name}
             type={el.type}
             title={el.title}
             name={el.name}
             value={el.value}
-            handleChange={handleChange || null}
-            handleClick={handleClick || null}
+            placeholder={el.placeholder}
+            handleChange={el.type !== 'button' ? handleChange : null}
+            handleClick={el.type === 'button' ? handleClick : null}
           />
-          <Component name={el.name} />
+          {el.isValidate && <Component name={el.name} />}
         </>
       ))}
     </Form>

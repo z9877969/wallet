@@ -25,34 +25,32 @@ const { categoriesList: incomesList } = incomesOpts;
 
 // let i = 0
 
-const reducer = (state, action) => {
-  switch (action.type) {
-    case 'date':
-      return { ...state, date: action.payload };
-    case 'time':
-      return { ...state, time: action.payload };
-    case 'category':
-      return { ...state, category: action.payload };
-    case 'summ':
-      return { ...state, summ: action.payload };
-    case 'currency':
-      return { ...state, currency: action.payload };
-    case 'comment':
-      return { ...state, comment: action.payload };
-    case 'initialEdit':
-      return { ...action.payload };
-    default:
-      return state;
-  }
-};
+// const reducer = (state, action) => {
+//   switch (action.type) {
+//     case 'date':
+//       return { ...state, date: action.payload };
+//     case 'time':
+//       return { ...state, time: action.payload };
+//     case 'category':
+//       return { ...state, category: action.payload };
+//     case 'summ':
+//       return { ...state, summ: action.payload };
+//     case 'currency':
+//       return { ...state, currency: action.payload };
+//     case 'comment':
+//       return { ...state, comment: action.payload };
+//     case 'initialEdit':
+//       return { ...action.payload };
+//     default:
+//       return state;
+//   }
+// };
 
 const TransactionPage = props => {
   const { match, location, history, title } = props;
   const dispatch = useDispatch();
   const { incomes, costs } = useSelector(state => state.transactions);
-  const cardId = match.url.slice(1);
-
-  const initialStateForm = {
+  const [initForm, setInitForm] = useState({
     date: moment().format('YYYY-MM-DD'),
     time: moment().format('HH:mm'),
     category:
@@ -62,29 +60,42 @@ const TransactionPage = props => {
     summ: '',
     currency: 'RUB',
     comment: '',
-  };
+  });
+  const cardId = match.url.slice(1);
 
-  const [stateForm, dispatchStateForm] = useReducer(reducer, initialStateForm);
+  // const initialStateForm = {
+  //   date: moment().format('YYYY-MM-DD'),
+  //   time: moment().format('HH:mm'),
+  //   category:
+  //     match.url.slice(1) === 'costs'
+  //       ? { id: 'food', name: 'Еда' }
+  //       : { id: 'salary', name: 'Зарплата' },
+  //   summ: '',
+  //   currency: 'RUB',
+  //   comment: '',
+  // };
 
-  const handleSubmitTransaction = e => {
-    const { category, transactionId } = match.params;
-    e.preventDefault();
+  // const [stateForm, dispatchStateForm] = useReducer(reducer, initialStateForm);
 
-    if (category && transactionId) {
-      category === 'incomes' && dispatch(editIncomes(transactionId, stateForm));
-      category === 'costs' && dispatch(editCosts(transactionId, stateForm));
-      handleGoToHome();
-    }
+  // const handleSubmitTransaction = e => {
+  //   const { category, transactionId } = match.params;
+  //   e.preventDefault();
 
-    cardId === 'incomes' && dispatch(addIncomes(stateForm));
-    cardId === 'costs' && dispatch(addCosts(stateForm));
-    handleGoToHome();
-  };
+  //   if (category && transactionId) {
+  //     category === 'incomes' && dispatch(editIncomes(transactionId, stateForm));
+  //     category === 'costs' && dispatch(editCosts(transactionId, stateForm));
+  //     handleGoToHome();
+  //   }
 
-  const handleChange = e => {
-    const { name, value } = e.target;
-    dispatchStateForm({ type: name, payload: value });
-  };
+  //   cardId === 'incomes' && dispatch(addIncomes(stateForm));
+  //   cardId === 'costs' && dispatch(addCosts(stateForm));
+  //   handleGoToHome();
+  // };
+
+  // const handleChange = e => {
+  //   const { name, value } = e.target;
+  //   dispatchStateForm({ type: name, payload: value });
+  // };
 
   const openCategoriesList = () => {
     const nextLocation = {
@@ -95,12 +106,12 @@ const TransactionPage = props => {
   };
 
   const onSetCategory = opts => {
-    dispatchStateForm({ type: 'category', payload: opts });
-    handleGoBack();
+    setInitForm(prev => ({ ...prev, category: opts }));
+    // handleGoBack();
   };
 
   const handleGoBack = () => {
-    history.push(location.state.from);
+    history.push(location.state?.from || '/');
   };
 
   const handleGoToHome = () => {
@@ -115,12 +126,9 @@ const TransactionPage = props => {
       [];
     const editTransaction = data.find(({ id }) => id === transactionId);
     if (category && transactionId) {
-      dispatchStateForm({ type: 'initialEdit', payload: editTransaction });
+      setInitForm(editTransaction);
     }
   }, []);
-
-  const [date, setDate] = useState(new Date());
-  // console.log('date :>> ', date);
 
   return (
     <>
@@ -129,20 +137,12 @@ const TransactionPage = props => {
           <Container>
             <Button cbOnClick={handleGoToHome} title={'Go back'} />
             <h1>{title}</h1>
-            <div className="datePicker">
-              <DatePicker
-                selected={date}
-                onChange={date => setDate(date)}
-                dateFormat="dd-MM-yy"
-                className="date"
-              />
-            </div>
 
             <FormTmp
-              options={getFormOpts(stateForm)}
-              handleChange={handleChange}
+              options={getFormOpts(initForm)}
+              // handleChange={handleChange}
               handleClick={openCategoriesList}
-              onSubmit={handleSubmitTransaction}
+              // onSubmit={handleSubmitTransaction}
             />
           </Container>
         </Section>

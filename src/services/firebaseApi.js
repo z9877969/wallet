@@ -105,6 +105,7 @@ const getCategoriesApi = ({ userId }) => {
   return axios
     .get(`/users/${userId}/categories.json`)
     .then(({ data }) => {
+      if (data === null) return { incomes: [], costs: [] };
       const { costs, incomes } = data;
       const transformDataToArr = data =>
         Object.entries(data).map(([id, data]) => ({ id, ...data }));

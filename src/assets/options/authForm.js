@@ -5,6 +5,7 @@ export default [
     name: 'login',
     id: 'login',
     value: '',
+    isValidate: true,
   },
   {
     title: 'Password',
@@ -12,5 +13,6 @@ export default [
     name: 'password',
     id: 'login',
     value: '',
+    isValidate: true,
   },
 ];

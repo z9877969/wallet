@@ -24,15 +24,18 @@ export const getCategories = () => (dispatch, getState) => {
   //   .get('/incomes-cat')
   getCategoriesApi({ userId })
     .then(({ incomes, costs }) => {
+      console.log('incomes :>> ', incomes);
       dispatch(getIncomesCatSuccess(incomes));
       !incomes.length && dispatch(isCategoriesNull('incomes'));
       dispatch(getCostsCatSuccess(costs));
       !costs.length && dispatch(isCategoriesNull('costs'));
     })
-    .catch(err =>
+    .catch(err => {
+      console.log("error");
       dispatch(
         getIncomesCatError({ message: err.message, status: err.status }),
-      ),
+      )
+    }
     );
 };
 
