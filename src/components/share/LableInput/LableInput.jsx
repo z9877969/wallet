@@ -1,6 +1,7 @@
 import css from './LabelInput.module.css';
 
 const LableInput = ({
+  id,
   title,
   type = 'text',
   name,
@@ -14,6 +15,7 @@ const LableInput = ({
       {title}
       {!handleClick ? (
         <input
+          id={id}
           type={type}
           name={name}
           value={value}
@@ -22,6 +24,7 @@ const LableInput = ({
         />
       ) : (
         <input
+          id={id}
           type={type}
           name={name}
           value={value}
