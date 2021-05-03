@@ -4,17 +4,19 @@ import FormTmp from '../FormTmp/FormTmp';
 import Section from '../share/Section/Section';
 import authFormOpts from '../../assets/options/authForm';
 import schema from '../../assets/validation/authValidateSchema';
+import withFormik from '../hoc/withFormik/withFormik';  
 
-const AuthForm = ({ handleSubmit, path }) => {
-  const onSubmit = data => handleSubmit(data);
+const AuthForm = ({ handleSubmit,options, path, handleChange, onSubmit, component }) => {
 
   return (
     <Section>
       <Container>
         <FormTmp
-          options={authFormOpts}
+          options={options}
           onSubmit={onSubmit}
+          handleChange={handleChange}
           validationSchema={schema}
+          component={component}
         />
         {path === '/login' && <NavLink to="/register">SignUp</NavLink>}
         {path === '/register' && <NavLink to="/login">LogIn</NavLink>}
@@ -23,4 +25,4 @@ const AuthForm = ({ handleSubmit, path }) => {
   );
 };
 
-export default AuthForm;
+export default withFormik(AuthForm);

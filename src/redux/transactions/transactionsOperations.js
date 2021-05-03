@@ -6,12 +6,8 @@ import {
   addIncomesRequest,
   addIncomesSuccess,
   addIncomesError,
-  getIncomesRequest,
   getIncomesSuccess,
-  getIncomesError,
-  getCostsRequest,
   getCostsSuccess,
-  getCostsError,
   removeCostsRequest,
   removeCostsSuccess,
   removeCostsError,
@@ -34,14 +30,11 @@ import {
   editTransaction,
 } from '../../services/firebaseApi';
 
-export const addCosts = data => (dispatch, getState) => {
-  const { localId, idToken } = getState().auth.user;
+export const addCosts = data => dispatch => {
   dispatch(addCostsRequest());
   addTransaction({
     data,
-    localId,
     transactionType: 'costs',
-    idToken,
   })
     .then(data => dispatch(addCostsSuccess(data)))
     .catch(err =>
@@ -49,14 +42,11 @@ export const addCosts = data => (dispatch, getState) => {
     );
 };
 
-export const addIncomes = data => (dispatch, getState) => {
-  const { localId, idToken } = getState().auth.user;
+export const addIncomes = data => dispatch => {
   dispatch(addIncomesRequest());
   addTransaction({
     data,
-    localId,
     transactionType: 'incomes',
-    idToken,
   })
     .then(data => dispatch(addIncomesSuccess(data)))
     .catch(err =>
@@ -65,16 +55,18 @@ export const addIncomes = data => (dispatch, getState) => {
 };
 
 export const getTransactions = () => (dispatch, getState) => {
-  const { localId, idToken } = getState().auth.user;
+  const { idToken } = getState().auth.user;
   dispatch(getTransactionsRequest());
-  getTransactionsApi({ userId: localId, idToken })
+  getTransactionsApi(idToken)
     .then(data => {
       const { costs = [], incomes = [] } = data;
       dispatch(getCostsSuccess(costs));
       dispatch(getIncomesSuccess(incomes));
     })
     .catch(err =>
-      dispatch(getTransactionsError({ message: err.message, status: err.status })),
+      dispatch(
+        getTransactionsError({ message: err.message, status: err.status }),
+      ),
     );
 };
 

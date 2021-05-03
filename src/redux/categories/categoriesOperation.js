@@ -15,10 +15,10 @@ import {
 } from './categoriesAction';
 
 export const getCategories = () => (dispatch, getState) => {
-  const { localId: userId } = getState().auth.user;
+  const { idToken } = getState().auth.user;
   dispatch(getCategoriesRequest());
 
-  getCategoriesApi({ userId })
+  getCategoriesApi(idToken)
     .then(({ incomes, costs }) => {
       !incomes.length
         ? dispatch(isIncomesCatNull('incomes'))
@@ -41,9 +41,7 @@ export const addIncomesCat = data => (dispatch, getState) => {
 
   addCategory({
     data,
-    localId,
     transactionType: 'costs',
-    idToken,
   })
     .then(data => dispatch(addIncomesCatSuccess(data)))
     .catch(err =>
@@ -59,9 +57,7 @@ export const addCostsCat = data => (dispatch, getState) => {
 
   addCategory({
     data,
-    localId,
     transactionType: 'incomes',
-    idToken,
   })
     .then(data => dispatch(addCostsCatSuccess(data)))
     .catch(err =>

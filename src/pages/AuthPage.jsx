@@ -2,6 +2,7 @@ import { useDispatch } from 'react-redux';
 import { useRouteMatch } from 'react-router-dom';
 import AuthForm from '../components/AuthForm/AuthForm';
 import { userRegister, userLogin } from '../redux/auth/authOperation';
+import authFormOpts from '../assets/options/authForm';
 
 const AuthPage = () => {
   const dispatch = useDispatch();
@@ -13,7 +14,7 @@ const AuthPage = () => {
     path === '/login' && dispatch(userLogin(data));
     path === '/register' && dispatch(userRegister(data));
   };
-  return <AuthForm handleSubmit={handleSubmit} path={path} />;
+  return <AuthForm options={authFormOpts} initialValues={{login: "", password: ""}} onSubmit={handleSubmit} path={path} />;
 };
 
 export default AuthPage;

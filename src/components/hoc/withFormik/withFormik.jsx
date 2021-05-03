@@ -2,18 +2,26 @@ import { useFormik } from 'formik';
 import ErrorComponent from './ErrorComponent';
 
 const withFormik = WrappedFormComponent => props => {
-  const { options, handleClick, onSubmit, validationSchema } = props;
-  
-  const initialValues = options.reduce((acc, { name, value }) => {
-    acc[name] = value;
-    return acc;
-  }, {});
+  const {
+    options,
+    initialValues,
+    handleClick,
+    onSubmit,
+    validationSchema,
+    ...rest
+  } = props;
 
   const formik = useFormik({
     initialValues,
     onSubmit: value => onSubmit(value),
     validationSchema,
   });
+
+  const categoryProp = options.find(({ name }) => name === 'category');
+  const categoryName = categoryProp?.value || null;
+  if (categoryName) {
+    formik.values.category = categoryName;
+  }
 
   const optionsToWraped = options.map(({ value, name, ...rest }) => ({
     ...rest,
@@ -28,6 +36,7 @@ const withFormik = WrappedFormComponent => props => {
       handleClick={handleClick}
       options={optionsToWraped}
       component={({ name }) => <ErrorComponent name={name} formik={formik} />}
+      {...rest}
     />
   );
 };

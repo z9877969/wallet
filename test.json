@@ -1,0 +1,95 @@
+{
+  "costs": {
+    "-MZN6Gnhw2wfEkjvuMOL": {
+      "category": { "id": "food", "name": "Еда" },
+      "comment": "",
+      "currency": "RUB",
+      "date": "2021-04-28",
+      "id": "-MZN6Gnhw2wfEkjvuMOL",
+      "summ": "1000",
+      "time": "13:53"
+    },
+    "-MZN7-nFWo-yRmR8Pslk": {
+      "category": { "id": "food", "name": "Еда" },
+      "comment": "",
+      "currency": "RUB",
+      "date": "2021-04-28",
+      "summ": "100",
+      "time": "13:56"
+    },
+    "-MZN7ksmDoo6SqaHh9ZZ": {
+      "category": { "id": "food", "name": "Еда" },
+      "comment": "",
+      "currency": "RUB",
+      "date": "2021-04-28",
+      "summ": "100",
+      "time": "14:00"
+    },
+    "-MZNP-2vF4-M9lgkQAZn": {
+      "category": { "id": "food", "name": "Еда" },
+      "comment": "",
+      "currency": "RUB",
+      "date": "2021-04-28",
+      "summ": "150",
+      "time": "15:15"
+    },
+    "-MZNPEHS92JQagkeTUtk": {
+      "category": { "id": "food", "name": "Еда" },
+      "comment": "",
+      "currency": "RUB",
+      "date": "2021-04-28",
+      "summ": "150",
+      "time": "15:15"
+    },
+    "-MZNV9761S2UpkUH9Zpk": {
+      "category": { "id": "food", "name": "Еда" },
+      "comment": "",
+      "currency": "RUB",
+      "date": "2021-04-27",
+      "summ": "500",
+      "time": "15:42"
+    },
+    "-MZSL4QiiBzDpWyegDAK": {
+      "category": { "id": "food", "name": "Еда" },
+      "comment": "",
+      "currency": "RUB",
+      "date": "2021-04-29",
+      "summ": "1000",
+      "time": "14:16"
+    },
+    "-MZXuBbrcPpJfaI_7P59": {
+      "category": { "id": "food", "name": "Еда" },
+      "comment": "",
+      "currency": "RUB",
+      "date": "2021-04-08",
+      "summ": "320",
+      "time": "16:11"
+    }
+  },
+  "incomes": {
+    "-MZMwmQb1AtEKgfXXlPD": {
+      "category": { "id": "salary", "name": "Зарплата" },
+      "comment": "",
+      "currency": "RUB",
+      "date": "2021-04-28",
+      "summ": "10000",
+      "time": "13:07"
+    },
+    "-MZN7n8-kd-JwboeWhNC": {
+      "category": { "id": "salary", "name": "Зарплата" },
+      "comment": "",
+      "currency": "RUB",
+      "date": "2021-04-28",
+      "summ": "5000",
+      "time": "14:00"
+    },
+    "-MZNRFuKVcdPhPoyNgLg": {
+      "category": { "id": "salary", "name": "Зарплата" },
+      "comment": "",
+      "currency": "RUB",
+      "date": "2021-04-14",
+      "summ": "1000",
+      "time": "15:26"
+    }
+  }
+}

@@ -1,6 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit';
 import {
   loginError,
+  loginRequest,
   logoutRequest,
   refreshError,
   registerError,
@@ -23,6 +24,7 @@ import {
 
 const errorReducer = createReducer(null, {
   [getTransactionsRequest]: () => null,
+  [loginRequest]: () => null,
   [logoutRequest]: () => null,
   [addIncomesError]: (_, { payload }) => payload,
   [addCostsError]: (_, { payload }) => payload,

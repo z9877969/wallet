@@ -1,4 +1,4 @@
-export default function getFormOpts(initialValues) {
+export default function getTransactionFormOpts(initialValues, categoryName) {
   return [
     {
       title: 'День',
@@ -18,7 +18,7 @@ export default function getFormOpts(initialValues) {
       title: 'Категории',
       type: 'button',
       name: 'category',
-      value: initialValues.category.name,
+      value: categoryName,
       isValidate: false,
     },
     {

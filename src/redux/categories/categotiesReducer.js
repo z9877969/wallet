@@ -1,12 +1,9 @@
 import { createReducer, combineReducers } from '@reduxjs/toolkit';
 import {
-  addCostsCatRequest,
   addCostsCatSuccess,
-  addIncomesCatRequest,
   addIncomesCatSuccess,
   getCostsCatSuccess,
   getIncomesCatSuccess,
-  isCategoriesNull,
   isCostsCatNull,
   isIncomesCatNull,
   resetCategoriesNull,
@@ -36,14 +33,6 @@ const costsCatReducer = createReducer([], {
 const isCategoriesNullReducer = createReducer(initialState.isCategory, {
   [isIncomesCatNull]: (state, { payload }) => ({ ...state, [payload]: true }),
   [isCostsCatNull]: (state, { payload }) => ({ ...state, [payload]: true }),
-  // [addCostsCatRequest]: state => ({
-  //   ...state,
-  //   ['costs']: false,
-  // }),
-  // [addIncomesCatRequest]: state => ({
-  //   ...state,
-  //   ['incomes']: false,
-  // }),
   [resetCategoriesNull]: (state, {payload}) => ({
     ...state,
     [payload]: false,

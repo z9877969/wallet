@@ -1,6 +1,5 @@
 import Form from '../share/Form/Form';
 import LableInput from '../share/LableInput';
-import withFormik from '../hoc/withFormik/withFormik';
 
 const FormTmp = ({
   options,
@@ -31,4 +30,4 @@ const FormTmp = ({
   );
 };
 
-export default withFormik(FormTmp);
+export default FormTmp;

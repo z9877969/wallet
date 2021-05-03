@@ -1,8 +1,5 @@
 {
   "mainPageTitle": "Доходы",
 
-  "categoriesList": [
-    { "id": "salary", "name": "Зарплата" },
-    { "id": "prepaid", "name": "Аванс" }
-  ]
+  "categoriesList": [{ "name": "Зарплата" }, { "name": "Аванс" }]
 }

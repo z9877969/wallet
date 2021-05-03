@@ -1,22 +1,13 @@
-import axios from 'axios';
-
-const dbConst = {
-  authKey: 'AIzaSyCRFI_dZqdUgbia23ytk0ieVoSex3J7HCY',
-  authUrl: 'https://identitytoolkit.googleapis.com/v1/',
-  dbUrl: 'https://careful-ensign-297412-default-rtdb.firebaseio.com/',
-  refreshUrl: 'https://securetoken.googleapis.com/v1/token',
-};
-
-const setRequestOptions = (baseUrl, params) => {
-  axios.defaults.baseURL = baseUrl;
-  axios.defaults.params = params;
-};
+import { apiOpts } from './classApiOpts';
+import help from '../utils/helpers';
 
 const signUp = data => {
-  setRequestOptions(dbConst.authUrl, { key: dbConst.authKey });
-  return axios
-    .post('accounts:signUp', { ...data, returnSecureToken: true })
+  const { setAuth, post, path, setUserId } = apiOpts;
+  setAuth();
+  return post(path.signUp, { ...data, returnSecureToken: true })
     .then(({ data }) => {
+      const { idToken } = data;
+      setUserId(idToken);
       return data;
     })
     .catch(e => {
@@ -25,10 +16,12 @@ const signUp = data => {
 };
 
 const signIn = data => {
-  setRequestOptions(dbConst.authUrl, { key: dbConst.authKey });
-  return axios
-    .post('accounts:signInWithPassword', { ...data, returnSecureToken: true })
+  const { setAuth, post, path, setUserId } = apiOpts;
+  setAuth();
+  return post(path.signIn, { ...data, returnSecureToken: true })
     .then(({ data }) => {
+      const { idToken } = data;
+      setUserId(idToken);
       return data;
     })
     .catch(e => {
@@ -37,15 +30,10 @@ const signIn = data => {
 };
 
 const refreshTokenApi = REFRESH_TOKEN => {
-  setRequestOptions(dbConst.refreshUrl, {
-    key: dbConst.authKey,
-    grant_type: 'refresh_token',
-    refresh_token: REFRESH_TOKEN,
-  });
-  return axios
+  apiOpts.setRefresh(REFRESH_TOKEN);
+  return apiOpts
     .post()
-    .then(({ data: { user_id, access_token, refresh_token } }) => ({
-      localId: user_id,
+    .then(({ data: { access_token, refresh_token } }) => ({
       idToken: access_token,
       refreshToken: refresh_token,
     }))
@@ -54,16 +42,15 @@ const refreshTokenApi = REFRESH_TOKEN => {
     });
 };
 
-const getTransactionsApi = ({ userId, idToken }) => {
-  setRequestOptions(dbConst.dbUrl, { auth: idToken });
-  return axios
-    .get(`/users/${userId}/transactions.json`)
+const getTransactionsApi = token => {
+  const { setDB, get, path } = apiOpts;
+  setDB(token);
+
+  return get(path.transactions())
     .then(({ data }) => {
       const { costs, incomes } = data;
-      const transformDataToArr = data =>
-        Object.entries(data).map(([id, data]) => ({ id, ...data }));
-      const costsToArr = transformDataToArr(costs || []);
-      const incomesToArr = transformDataToArr(incomes || []);
+      const costsToArr = help.turnDataListToArr(costs || []);
+      const incomesToArr = help.turnDataListToArr(incomes || []);
       return { incomes: incomesToArr, costs: costsToArr };
     })
     .catch(e => {
@@ -71,9 +58,9 @@ const getTransactionsApi = ({ userId, idToken }) => {
     });
 };
 
-const addTransaction = ({ data, localId, transactionType, idToken }) => {
-  return axios
-    .post(`/users/${localId}/transactions/${transactionType}.json`, data)
+const addTransaction = ({ data, transactionType: type }) => {
+  const { post, path } = apiOpts;
+  return post(path.transactions(type), { data })
     .then(({ data: { name: id } }) => {
       return { ...data, id };
     })
@@ -82,35 +69,27 @@ const addTransaction = ({ data, localId, transactionType, idToken }) => {
     });
 };
 
-const editTransaction = ({
-  data,
-  localId,
-  transactionType,
-  id: transactionId,
-}) => {
-  return axios
-    .patch(
-      `/users/${localId}/transactions/${transactionType}/${transactionId}.json`,
-      data,
-    )
+const editTransaction = ({ data, transactionType: type, id }) => {
+  const { patch, path } = apiOpts;
+  return patch(path.transactions(type, id), data)
     .then(({ data }) => {
-      return { ...data, id: transactionId };
+      return { ...data, id };
     })
     .catch(e => {
       throw e;
     });
 };
 
-const getCategoriesApi = ({ userId }) => {
-  return axios
-    .get(`/users/${userId}/categories.json`)
+const getCategoriesApi = token => {
+  const { setDB, get, path } = apiOpts;
+  setDB(token);
+
+  return get(path.categories())
     .then(({ data }) => {
       if (data === null) return { incomes: [], costs: [] };
       const { costs, incomes } = data;
-      const transformDataToArr = data =>
-        Object.entries(data).map(([id, data]) => ({ id, ...data }));
-      const costsToArr = costs ? transformDataToArr(costs) : [];
-      const incomesToArr = incomes ? transformDataToArr(incomes) : [];
+      const costsToArr = costs ? help.turnDataListToArr(costs) : [];
+      const incomesToArr = incomes ? help.turnDataListToArr(incomes) : [];
       return { incomes: incomesToArr, costs: costsToArr };
     })
     .catch(e => {
@@ -118,12 +97,9 @@ const getCategoriesApi = ({ userId }) => {
     });
 };
 
-const addCategory = ({ data, localId, transactionType, idToken }) => {
-  return axios
-    .post(
-      `/users/${localId}/categories/${transactionType}.json?auth=${idToken}`,
-      data,
-    )
+const addCategory = ({ data, transactionType: type }) => {
+  const { post, path } = apiOpts;
+  return post(path.categories(type), data)
     .then(({ data: { name: id } }) => {
       return { ...data, id };
     })

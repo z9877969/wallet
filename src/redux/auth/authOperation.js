@@ -30,7 +30,10 @@ const userLogin = data => dispatch => {
 
   signIn(data)
     .then(data => dispatch(loginSuccess(data)))
-    .catch(e => dispatch(loginError({ message: e.message, status: e.status })));
+    .catch(e => {
+      console.log('e :>> ', e);
+      dispatch(loginError({ message: e.message, status: e.status }));
+    });
 };
 
 const userRefresh = () => (dispatch, getState) => {

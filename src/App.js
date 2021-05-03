@@ -3,8 +3,8 @@ import { Redirect, Route, Switch } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
 import MainPage from './pages/MainPage';
 import TransactionPage from './pages/TransactionPage';
-import PageCategoriesForPeriod from './pages/pageCategoriesForPeriod';
-import PageTransactionsList from './pages/pageTransactionsList';
+import PageCategoriesForPeriod from './pages/CategoriesForPeriodPage';
+import PageTransactionsList from './pages/TransactionsListPage';
 import AuthHeader from './components/AuthHeader/AuthHeader';
 import AuthPage from './pages/AuthPage';
 import costsDb from './db/costs.json';
@@ -16,12 +16,20 @@ import { userRefresh } from './redux/auth/authOperation';
 
 const App = () => {
   const dispatch = useDispatch();
-  const isAuth = useSelector(getIsToken);
+  const isAuth = useSelector(getIsAuth);
   // const isAuth = true;
   const error = useSelector(state => state.error);
 
   const handleLogout = () => dispatch(logoutSuccess());
 
+  // needs after refresh
+  useEffect(() => {
+    if (isAuth) {
+      dispatch(getTransactions());
+    }
+  }, []);
+
+  //needds after auth
   useEffect(() => {
     if (isAuth) {
       dispatch(getTransactions());

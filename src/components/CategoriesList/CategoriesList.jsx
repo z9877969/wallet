@@ -16,8 +16,15 @@ import {
 import { resetCategoriesNull } from '../../redux/categories/categoriesAction';
 import { categoriesList as catListIncomes } from '../../db/incomes.json';
 import { categoriesList as catListCosts } from '../../db/costs.json';
+import LableInput from '../share/LableInput';
 
-const CategoriesList = ({ onCategoryClick, match, history, location }) => {
+const CategoriesList = ({
+  onCategoryClick,
+  match,
+  history,
+  location,
+  handleChange,
+}) => {
   const dispatch = useDispatch();
   const { url, path } = match;
   const { push } = history;
@@ -51,20 +58,24 @@ const CategoriesList = ({ onCategoryClick, match, history, location }) => {
 
   useEffect(() => {
     isCatIncomesNull &&
-      catListIncomes.forEach(async (data, i) => {
+      catListIncomes.forEach(async ({ name }, i) => {
         i === 0 && dispatch(resetCategoriesNull('incomes'));
-        await dispatch(addIncomesCat(data));
+        await dispatch(addIncomesCat({ name }));
       });
     isCatCostsNull &&
       category === 'costs' &&
-      catListCosts.forEach(async (data, i) => {
+      catListCosts.forEach(async ({ name }, i) => {
         i === 0 && dispatch(resetCategoriesNull('costs'));
-        await dispatch(addCostsCat(data));
+        await dispatch(addCostsCat({ name }));
       });
   }, [isCatIncomesNull, isCatCostsNull]);
 
   return (
     <Section>
+      <label>
+        checkbox
+        <input type="checkbox" name="category"/>
+      </label>
       <Container>
         <Button title="Go back" cbOnClick={handleGoBack} />
         <h2>Categories</h2>
@@ -72,12 +83,19 @@ const CategoriesList = ({ onCategoryClick, match, history, location }) => {
           {categoriesList.map(({ id, name }) => {
             return (
               <Item key={id}>
-                <span
+                <LableInput
+                  title={name}
+                  type="checkbox"
+                  name="category"
+                  value={name}
+                  // handleChange={handleChange}
+                />
+                {/* <span
                   className={css.item}
                   onClick={() => onCategoryClick({ id, name })}
                 >
                   {name}
-                </span>
+                </span> */}
                 <Button title={'...'} />
               </Item>
             );
