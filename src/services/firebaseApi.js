@@ -60,7 +60,7 @@ const getTransactionsApi = token => {
 
 const addTransaction = ({ data, transactionType: type }) => {
   const { post, path } = apiOpts;
-  return post(path.transactions(type), { data })
+  return post(path.transactions(type), data)
     .then(({ data: { name: id } }) => {
       return { ...data, id };
     })

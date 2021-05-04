@@ -41,7 +41,7 @@ export const addIncomesCat = data => (dispatch, getState) => {
 
   addCategory({
     data,
-    transactionType: 'costs',
+    transactionType: 'incomes',
   })
     .then(data => dispatch(addIncomesCatSuccess(data)))
     .catch(err =>
@@ -57,7 +57,7 @@ export const addCostsCat = data => (dispatch, getState) => {
 
   addCategory({
     data,
-    transactionType: 'incomes',
+    transactionType: 'costs',
   })
     .then(data => dispatch(addCostsCatSuccess(data)))
     .catch(err =>

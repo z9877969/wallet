@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { Redirect, Route, Switch } from 'react-router';
+import React, { useEffect, useState } from 'react';
+import { Redirect, Route, Switch, useHistory } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
 import MainPage from './pages/MainPage';
 import TransactionPage from './pages/TransactionPage';
@@ -16,9 +16,12 @@ import { userRefresh } from './redux/auth/authOperation';
 
 const App = () => {
   const dispatch = useDispatch();
-  const isAuth = useSelector(getIsAuth);
+  const { push, location } = useHistory();
+  // const isAuth = useSelector(getIsAuth);
+  const isAuth = useSelector(getIsToken);
   // const isAuth = true;
   const error = useSelector(state => state.error);
+  const [locationBeforeError, setLocationBeforeError] = useState(location);
 
   const handleLogout = () => dispatch(logoutSuccess());
 
@@ -27,6 +30,7 @@ const App = () => {
     if (isAuth) {
       dispatch(getTransactions());
     }
+    // setLocationBeforeError(location);
   }, []);
 
   //needds after auth
@@ -37,9 +41,10 @@ const App = () => {
   }, [isAuth]);
 
   useEffect(() => {
-    error?.message.includes('code 401') && dispatch(userRefresh());
-    // : error && dispatch(logoutSuccess());
-  }, [error?.message]);
+    const isAuth = !error?.message.includes('code 401')
+    isAuth && setLocationBeforeError(location);
+    !isAuth && dispatch(userRefresh());
+  }, [error?.message, location]);
 
   return (
     <>
@@ -55,6 +60,7 @@ const App = () => {
       ) : (
         <>
           <Switch>
+            {error?.message.includes('code 401') && <Redirect to={locationBeforeError}/>}
             <Route
               path="/"
               exact
@@ -87,7 +93,7 @@ const App = () => {
               path="/incomes"
               render={props => <TransactionPage {...props} title={'Доходы'} />}
             />
-            <Redirect to="/" />
+            <Redirect to="/" />            
           </Switch>
         </>
       )}

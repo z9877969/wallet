@@ -90,13 +90,13 @@ const TransactionPage = props => {
 
   useEffect(() => {
     isCatIncomesNull &&
-      transactionType === 'incomes' &&
+      // transactionType === 'incomes' &&
       catListIncomes.forEach(async ({ name }, i) => {
         i === 0 && dispatch(resetCategoriesNull('incomes'));
         await dispatch(addIncomesCat({ name }));
       });
     isCatCostsNull &&
-      transactionType === 'costs' &&
+      // transactionType === 'costs' &&
       catListCosts.forEach(async ({ name }, i) => {
         i === 0 && dispatch(resetCategoriesNull('costs'));
         await dispatch(addCostsCat({ name }));
