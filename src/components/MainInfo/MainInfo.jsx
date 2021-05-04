@@ -10,15 +10,21 @@ import help from '../../utils/helpers';
 import css from './MainInfo.module.css';
 
 const MainInfo = ({ title, cardId }) => {
-  const abracadabra = useHistory();
+  const history = useHistory();
   const transactions = useSelector(state => state.transactions);
 
   const transByCat = transactions[cardId] || [];
   const periodsSumms = help.getPeriodsSumms(transByCat);
 
   const handleToggleCard = () => {
-    const pathname = `/${cardId}`;
-    abracadabra.push(pathname);
+    const { location } = history;
+    const pathname = {
+      pathname: `/${cardId}`,
+      state: {
+        from: location.pathname,
+      },
+    };
+    history.push(pathname);
   };
   return (
     <Section title={title}>

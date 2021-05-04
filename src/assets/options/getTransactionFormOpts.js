@@ -19,7 +19,7 @@ export default function getTransactionFormOpts(initialValues, categoryName) {
       type: 'button',
       name: 'category',
       value: categoryName,
-      isValidate: false,
+      isValidate: true,
     },
     {
       title: 'Сумма',

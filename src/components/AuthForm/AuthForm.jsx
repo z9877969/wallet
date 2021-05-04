@@ -2,11 +2,9 @@ import { NavLink } from 'react-router-dom';
 import Container from '../share/Container/Container';
 import FormTmp from '../FormTmp/FormTmp';
 import Section from '../share/Section/Section';
-import authFormOpts from '../../assets/options/authForm';
-import schema from '../../assets/validation/authValidateSchema';
 import withFormik from '../hoc/withFormik/withFormik';  
 
-const AuthForm = ({ handleSubmit,options, path, handleChange, onSubmit, component }) => {
+const AuthForm = ({ options, path, handleChange, onSubmit, component }) => {
 
   return (
     <Section>
@@ -15,7 +13,6 @@ const AuthForm = ({ handleSubmit,options, path, handleChange, onSubmit, componen
           options={options}
           onSubmit={onSubmit}
           handleChange={handleChange}
-          validationSchema={schema}
           component={component}
         />
         {path === '/login' && <NavLink to="/register">SignUp</NavLink>}

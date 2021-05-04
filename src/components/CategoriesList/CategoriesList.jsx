@@ -1,6 +1,5 @@
-import { useEffect } from 'react';
 import { Route } from 'react-router';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import Button from '../share/Button';
 import Container from '../share/Container/Container';
 import Item from '../share/Item';
@@ -8,38 +7,19 @@ import List from '../share/List';
 import Section from '../share/Section/Section';
 import AddCategory from '../AddCategory/AddCategory';
 import css from './CategoriesList.module.css';
-import {
-  addCostsCat,
-  addIncomesCat,
-  getCategories,
-} from '../../redux/categories/categoriesOperation';
-import { resetCategoriesNull } from '../../redux/categories/categoriesAction';
-import { categoriesList as catListIncomes } from '../../db/incomes.json';
-import { categoriesList as catListCosts } from '../../db/costs.json';
 import LableInput from '../share/LableInput';
 
-const CategoriesList = ({
-  onCategoryClick,
-  match,
-  history,
-  location,
-  handleChange,
-}) => {
-  const dispatch = useDispatch();
+const CategoriesList = ({ match, history, location, handleChangeFormik }) => {
   const { url, path } = match;
   const { push } = history;
   const { state } = location;
 
-  const categories = useSelector(state => state.category);
-  const { incomes: isCatIncomesNull, costs: isCatCostsNull } = useSelector(
-    state => state.category.isNull,
-  );
+  const categories = useSelector(state => state.categories);
 
-  const category = url.split('/')[1];
-  const categoriesList = categories[category] || [];
+  const transactionType = url.split('/')[1];
+  const categoriesList = categories[transactionType] || [];
 
-  const handleAddCategory = () => {
-    dispatch(addIncomesCat('data'));
+  const handleOpenAddCategory = () => {
     history.push({
       pathname: `${url}/add`,
       state: {
@@ -52,29 +32,16 @@ const CategoriesList = ({
     push(state?.from || '/');
   };
 
-  useEffect(() => {
-    !categoriesList.length && dispatch(getCategories());
-  }, []);
-
-  useEffect(() => {
-    isCatIncomesNull &&
-      catListIncomes.forEach(async ({ name }, i) => {
-        i === 0 && dispatch(resetCategoriesNull('incomes'));
-        await dispatch(addIncomesCat({ name }));
-      });
-    isCatCostsNull &&
-      category === 'costs' &&
-      catListCosts.forEach(async ({ name }, i) => {
-        i === 0 && dispatch(resetCategoriesNull('costs'));
-        await dispatch(addCostsCat({ name }));
-      });
-  }, [isCatIncomesNull, isCatCostsNull]);
+  const handleChange = e => {
+    handleChangeFormik(e);
+    handleGoBack();
+  };
 
   return (
     <Section>
       <label>
         checkbox
-        <input type="checkbox" name="category"/>
+        <input type="checkbox" name="category" placeholder="" />
       </label>
       <Container>
         <Button title="Go back" cbOnClick={handleGoBack} />
@@ -85,24 +52,18 @@ const CategoriesList = ({
               <Item key={id}>
                 <LableInput
                   title={name}
-                  type="checkbox"
+                  type="radio"
                   name="category"
                   value={name}
-                  // handleChange={handleChange}
+                  handleChange={handleChange}
                 />
-                {/* <span
-                  className={css.item}
-                  onClick={() => onCategoryClick({ id, name })}
-                >
-                  {name}
-                </span> */}
                 <Button title={'...'} />
               </Item>
             );
           })}
         </List>
         {location.pathname.split('/').pop() !== 'add' && (
-          <Button title="Add Category" cbOnClick={handleAddCategory} />
+          <Button title="Add Category" cbOnClick={handleOpenAddCategory} />
         )}
         <Route path={`${path}/add`} exact component={AddCategory} />
       </Container>

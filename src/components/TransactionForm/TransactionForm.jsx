@@ -17,6 +17,7 @@ const TransactionForm = ({
   onSubmit,
 }) => {
   const location = useLocation();
+  
   return (
     <>
       {location.pathname === `/${cardId}` && (
@@ -30,7 +31,7 @@ const TransactionForm = ({
               handleClick={handleClick}
               handleChange={handleChange}
               component={component}
-              // onSubmit={onSubmit}
+              onSubmit={onSubmit}
             />
           </Container>
         </Section>

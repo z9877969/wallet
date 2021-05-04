@@ -15,7 +15,7 @@ import {
 } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import transactions from './transactions/transactionsReducer';
-import category from './categories/categotiesReducer';
+import categories from './categories/categotiesReducer';
 import error from './errorReducer';
 import auth from './auth/authReducer';
 
@@ -30,7 +30,7 @@ export const store = configureStore({
   reducer: {
     transactions,
     error,
-    category,
+    categories,
     auth: persistReducer(persistConfigAuth, auth),
   },
   middleware: getDefaultMiddleware({
