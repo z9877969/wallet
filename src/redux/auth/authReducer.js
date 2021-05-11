@@ -1,5 +1,11 @@
-import { createReducer } from '@reduxjs/toolkit';
-import { loginSuccess, logoutSuccess, refreshSuccess, registerSuccess } from './authAction';
+import { createReducer, combineReducers } from '@reduxjs/toolkit';
+import {
+  loginSuccess,
+  logoutSuccess,
+  refreshSuccess,
+  registerSuccess,
+  setIsAuth,
+} from './authAction';
 
 const initialState = {
   user: {
@@ -11,39 +17,34 @@ const initialState = {
   isAuth: false,
 };
 
-const authReducer = createReducer(initialState, {
+const userReducer = createReducer(initialState.user, {
   [loginSuccess]: (_, { payload }) => ({
-    user: {
-      email: payload.email,
-      idToken: payload.idToken,
-      localId: payload.localId,
-      refreshToken: payload.refreshToken
-    },
-    isAuth: true,
+    email: payload.email,
+    idToken: payload.idToken,
+    refreshToken: payload.refreshToken,
   }),
-  [registerSuccess]: (_, { payload }) => {
-    return {
-      user: {
-        email: payload.email,
-        idToken: payload.idToken,
-        localId: payload.localId,
-        refreshToken: payload.refreshToken
-      },
-      isAuth: true,
-    };
-  },
-  [refreshSuccess]: (state, {payload}) => {
-    return {
-      user: {
-        email: state.user.email,
-        idToken: payload.idToken,
-        localId: payload.localId,
-        refreshToken: payload.refreshToken
-      },
-      isAuth: true,
-    }
-  },
-  [logoutSuccess]: () => initialState,
+  [registerSuccess]: (_, { payload }) => ({
+    email: payload.email,
+    idToken: payload.idToken,
+    refreshToken: payload.refreshToken,
+  }),
+  [refreshSuccess]: (state, { payload }) => ({
+    email: state.email,
+    idToken: payload.idToken,
+    localId: payload.localId,
+    refreshToken: payload.refreshToken,
+  }),
+  [logoutSuccess]: () => initialState.user,
 });
 
-export default authReducer;
+const isAuthReducer = createReducer(initialState.isAuth, {
+  [loginSuccess]: () => true,
+  [registerSuccess]: () => true,
+  [setIsAuth]: (_, {payload}) => payload,
+  logoutSuccess: () => initialState.isAuth,
+})
+
+export default combineReducers({
+  user: userReducer,
+  isAuth: isAuthReducer,
+});

@@ -4,13 +4,14 @@ import {
   loginRequest,
   logoutRequest,
   refreshError,
+  refreshRequest,
   registerError,
-} from './auth/authAction';
+} from '../auth/authAction';
 import {
   addCostsCatError,
   addIncomesCatError,
   getCategoriesError,
-} from './categories/categoriesAction';
+} from '../categories/categoriesAction';
 import {
   addCostsError,
   addIncomesError,
@@ -20,12 +21,13 @@ import {
   getTransactionsRequest,
   removeCostsError,
   removeIncomesError,
-} from './transactions/transactionsAction';
+} from '../transactions/transactionsAction';
 
 const errorReducer = createReducer(null, {
   [getTransactionsRequest]: () => null,
   [loginRequest]: () => null,
   [logoutRequest]: () => null,
+  [refreshRequest]: () => null,
   [addIncomesError]: (_, { payload }) => payload,
   [addCostsError]: (_, { payload }) => payload,
   [getTransactionsError]: (_, { payload }) => payload,

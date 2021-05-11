@@ -10,6 +10,8 @@ import Section from '../components/share/Section/Section';
 import { addTransactionListId } from '../redux/transactions/transactionsAction';
 import help from '../utils/helpers';
 
+const dataOf = help.dataByPeriod;
+
 const PageCategoriesForPeriod = props => {
   const match = useRouteMatch();
   const location = useLocation();
@@ -18,6 +20,10 @@ const PageCategoriesForPeriod = props => {
   const { category } = match.params;
   const data = props[category] || [];
   const dataByCategories = help.getDataByCategories(data);
+
+  console.log('data :>> ', data);
+  console.log('dataOf :>> ', data.length && dataOf.getDataByCat(data ));
+  // console.log('dataOf :>> ', dataOf.getYear(dataOf.current));
 
   const handleOpenList = id => {
     history.push({

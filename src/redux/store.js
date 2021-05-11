@@ -16,7 +16,7 @@ import {
 import storage from 'redux-persist/lib/storage';
 import transactions from './transactions/transactionsReducer';
 import categories from './categories/categotiesReducer';
-import error from './errorReducer';
+import error from './error/errorReducer';
 import auth from './auth/authReducer';
 
 const persistConfigAuth = {

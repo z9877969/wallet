@@ -23,6 +23,7 @@ const PageTransactionsList = props => {
   const data = props[category] || [];
 
   const dataRender = data.filter(({ category: { id } }) => id === props.listId);
+  console.log('dataRender :>> ', dataRender);
 
   const handleGoBack = () => {
     history.push(location.state ? location.state.from : '/');

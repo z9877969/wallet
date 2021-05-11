@@ -1,0 +1,1 @@
+export const getNeedRefresh = state => state.error?.message.includes('code 401');

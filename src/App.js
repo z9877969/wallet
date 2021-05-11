@@ -3,7 +3,7 @@ import { Redirect, Route, Switch, useHistory } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
 import MainPage from './pages/MainPage';
 import TransactionPage from './pages/TransactionPage';
-import PageCategoriesForPeriod from './pages/CategoriesForPeriodPage';
+import CategoriesForPeriodPage from './pages/CategoriesForPeriodPage';
 import PageTransactionsList from './pages/TransactionsListPage';
 import AuthHeader from './components/AuthHeader/AuthHeader';
 import AuthPage from './pages/AuthPage';
@@ -11,29 +11,26 @@ import costsDb from './db/costs.json';
 import incomesDb from './db/incomes.json';
 import { getTransactions } from './redux/transactions/transactionsOperations';
 import { getIsAuth, getIsToken } from './redux/auth/authSelector';
-import { logoutSuccess } from './redux/auth/authAction';
+import { logoutSuccess, setIsAuth } from './redux/auth/authAction';
 import { userRefresh } from './redux/auth/authOperation';
+import { getNeedRefresh } from './redux/error/errorSelector';
+import {hasTransactions} from './redux/transactions/transactionsSelector';
 
 const App = () => {
   const dispatch = useDispatch();
-  const { push, location } = useHistory();
-  // const isAuth = useSelector(getIsAuth);
-  const isAuth = useSelector(getIsToken);
-  // const isAuth = true;
-  const error = useSelector(state => state.error);
+  const { location } = useHistory();
+  const isAuth = useSelector(getIsAuth);
+  const isToken = useSelector(getIsToken)
+  const needRefresh = useSelector(getNeedRefresh);
+  const hasTrans = useSelector(hasTransactions);
   const [locationBeforeError, setLocationBeforeError] = useState(location);
 
   const handleLogout = () => dispatch(logoutSuccess());
 
-  // needs after refresh
   useEffect(() => {
-    if (isAuth) {
-      dispatch(getTransactions());
-    }
-    // setLocationBeforeError(location);
-  }, []);
-
-  //needds after auth
+    isToken && dispatch(setIsAuth(true))
+  }, [])
+  
   useEffect(() => {
     if (isAuth) {
       dispatch(getTransactions());
@@ -41,10 +38,8 @@ const App = () => {
   }, [isAuth]);
 
   useEffect(() => {
-    const isAuth = !error?.message.includes('code 401')
-    isAuth && setLocationBeforeError(location);
-    !isAuth && dispatch(userRefresh());
-  }, [error?.message, location]);
+    !needRefresh ? setLocationBeforeError(location) : dispatch(userRefresh());
+  }, [needRefresh, location]);
 
   return (
     <>
@@ -60,7 +55,9 @@ const App = () => {
       ) : (
         <>
           <Switch>
-            {error?.message.includes('code 401') && <Redirect to={locationBeforeError}/>}
+            {needRefresh && (
+              <Redirect to={locationBeforeError} />
+            )}
             <Route
               path="/"
               exact
@@ -83,7 +80,7 @@ const App = () => {
             />
             <Route
               path="/categories/:category"
-              render={() => <PageCategoriesForPeriod />}
+              render={() => <CategoriesForPeriodPage />}
             />
             <Route
               path="/costs"
@@ -93,7 +90,7 @@ const App = () => {
               path="/incomes"
               render={props => <TransactionPage {...props} title={'Доходы'} />}
             />
-            <Redirect to="/" />            
+            <Redirect to="/" />
           </Switch>
         </>
       )}
