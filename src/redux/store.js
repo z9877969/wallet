@@ -18,6 +18,7 @@ import transactions from './transactions/transactionsReducer';
 import categories from './categories/categotiesReducer';
 import error from './error/errorReducer';
 import auth from './auth/authReducer';
+import analitics from './analitics/analiticsReducer';
 
 const persistConfigAuth = {
   key: 'auth',
@@ -26,12 +27,19 @@ const persistConfigAuth = {
   storage,
 };
 
+const persistConfigTransactions = {
+  key: "listId",
+  whitelist: ['listId'],
+  storage,
+};
+
 export const store = configureStore({
   reducer: {
-    transactions,
-    error,
-    categories,
     auth: persistReducer(persistConfigAuth, auth),
+    transactions: persistReducer(persistConfigTransactions, transactions),
+    categories,
+    analitics,
+    error,
   },
   middleware: getDefaultMiddleware({
     serializableCheck: {

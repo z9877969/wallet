@@ -13,14 +13,10 @@ import {
   editIncomesSuccess,
 } from './transactionsAction';
 
-const setToLS = (key, data) => localStorage.setItem(key, JSON.stringify(data));
-const getFromLS = (key, initial) =>
-  JSON.parse(localStorage.getItem(key)) || initial;
-
 const initialState = {
   costs: [],
   incomes: [],
-  listId: getFromLS('listId', ''),
+  listId: "",
 };
 
 const costsReducer = createReducer(initialState.costs, {
@@ -48,14 +44,8 @@ const incomesReducer = createReducer(initialState.incomes, {
 });
 
 const transactionListIdReducer = createReducer(initialState.listId, {
-  [addTransactionListId]: (_, { payload }) => {
-    setToLS('listId', payload);
-    return payload;
-  },
-  [removeTransactionListId]: () => {
-    setToLS('listId', '');
-    return initialState.listId;
-  },
+  [addTransactionListId]: (_, { payload }) => payload,
+  [removeTransactionListId]: () => initialState.listId,
   [logoutSuccess]: () => initialState.listId,
 });
 

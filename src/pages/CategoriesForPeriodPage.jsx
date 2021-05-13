@@ -1,4 +1,4 @@
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 
 import Button from '../components/share/Button';
@@ -8,22 +8,23 @@ import List from '../components/share/List';
 import Section from '../components/share/Section/Section';
 
 import { addTransactionListId } from '../redux/transactions/transactionsAction';
+import { setCatData } from '../redux/analitics/analiticsAction';
 import help from '../utils/helpers';
+import { useEffect } from 'react';
+import moment from 'moment';
+import { getCatsWithTotal } from '../redux/analitics/analiticsSelector';
+import { getTransactions } from '../redux/transactions/transactionsSelector';
 
-const dataOf = help.dataByPeriod;
-
-const PageCategoriesForPeriod = props => {
+const CategoriesForPeriodPage = () => {
+  const dispatch = useDispatch();
   const match = useRouteMatch();
   const location = useLocation();
   const history = useHistory();
 
   const { category } = match.params;
-  const data = props[category] || [];
-  const dataByCategories = help.getDataByCategories(data);
 
-  console.log('data :>> ', data);
-  console.log('dataOf :>> ', data.length && dataOf.getDataByCat(data ));
-  // console.log('dataOf :>> ', dataOf.getYear(dataOf.current));
+  const data = useSelector(getTransactions)[category] || [];
+  const dataRender = useSelector(getCatsWithTotal);
 
   const handleOpenList = id => {
     history.push({
@@ -32,10 +33,14 @@ const PageCategoriesForPeriod = props => {
         from: location,
       },
     });
-    props.addTransactionListId(id);
+    dispatch(addTransactionListId(id));
   };
 
   const handleGoBack = () => history.push('/');
+
+  useEffect(() => {
+    dispatch(setCatData({ data, date: moment().format('YYYY-MM-DD') }));
+  }, []);
 
   return (
     <>
@@ -43,13 +48,13 @@ const PageCategoriesForPeriod = props => {
         <Container>
           <Button title="GoBack" cbOnClick={handleGoBack} />
           <List>
-            {dataByCategories.map(({ name, id, summ }) => (
-              <Item key={id}>
-                <span>{name}</span> <span>{summ}</span>
+            {dataRender.map(({ category, total }) => (
+              <Item key={category}>
+                <span>{category}</span> <span>{total}</span>
                 <Button
                   title="show list"
                   cbOnClick={handleOpenList}
-                  cbArgs={[id]}
+                  cbArgs={[category]}
                 />
               </Item>
             ))}
@@ -60,16 +65,4 @@ const PageCategoriesForPeriod = props => {
   );
 };
 
-const mapStateToProps = state => ({
-  incomes: state.transactions.incomes,
-  costs: state.transactions.costs,
-});
-
-const mapDispatchToProps = {
-  addTransactionListId,
-};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(PageCategoriesForPeriod);
+export default CategoriesForPeriodPage;

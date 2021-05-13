@@ -42,26 +42,50 @@ class DataByPeriod {
       return year === periodYear && month === periodMonth;
     });
   };
+  getDataYear = (data, date) => {
+    const { year: periodYear } = this.splitDate(date);
+    return data.filter(({ date }) => {
+      const { year } = this.splitDate(date);
+      return year === periodYear;
+    });
+  };
   getDataByCat = data => {
-    return data.reduce((acc, { category: cat, ...rest }) => {
-      // const { category: cat } = transaction;
+    return data.reduce((acc, transaction) => {
+      const { category: cat } = transaction;
+      const sum = Number(transaction.summ);
       const category = typeof cat === 'object' ? cat.name : cat;
-      if (!acc.length) return [{ [category]: [{ ...rest, category }] }];
-      let i = 0;
-      const curCatList = acc.find((catList, idx) => {
-        i = idx;
-
-        return category in catList;
-      });
-      if (curCatList !== undefined) {
-        console.log('acc[i] :>> ', acc[i]);
-        acc[i][category].push({ ...rest, category });
+      if (!acc[category]) {
+        acc[category] = { total: sum };
+        acc[category] = {
+          ...acc[category],
+          data: [transaction],
+        };
         return acc;
       }
-      acc.push({ [category]: [{ ...rest, category }] });
-
+      acc[category].data.push(transaction);
+      acc[category].total += sum;
       return acc;
-    }, []);
+    }, {});
+  };
+  getCategoriesDataList = ({ data, date, period = 'all' }) => {
+    let newData = [];
+    switch (period) {
+      case 'day':
+        newData = this.getDataDay(data, date);
+        break;
+      case 'week':
+        newData = this.getDataWeek(data, date);
+        break;
+      case 'month':
+        newData = this.getDataMonth(data, date);
+        break;
+      case 'year':
+        newData = this.getDataYear(data, date);
+        break;
+      default:
+        newData = data;
+    }
+    return this.getDataByCat(newData);
   };
 }
 

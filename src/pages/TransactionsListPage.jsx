@@ -1,18 +1,18 @@
-import { connect, useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 import Button from '../components/share/Button/Button';
 import Container from '../components/share/Container/Container';
 import Item from '../components/share/Item';
 import List from '../components/share/List/List';
 import Section from '../components/share/Section/Section';
+import { getCatDataByPeriod } from '../redux/analitics/analiticsSelector';
+import { removeTransactionListId } from '../redux/transactions/transactionsAction';
 import {
   removeCosts,
   removeIncomes,
 } from '../redux/transactions/transactionsOperations';
 
-import help from '../utils/helpers';
-
-const PageTransactionsList = props => {
+const TransactionsListPage = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   const location = useLocation();
@@ -20,13 +20,11 @@ const PageTransactionsList = props => {
 
   const { category } = match.params;
 
-  const data = props[category] || [];
-
-  const dataRender = data.filter(({ category: { id } }) => id === props.listId);
-  console.log('dataRender :>> ', dataRender);
+  const dataRender = useSelector(getCatDataByPeriod);
 
   const handleGoBack = () => {
     history.push(location.state ? location.state.from : '/');
+    dispatch(removeTransactionListId());
   };
 
   const handleRemoveTransaction = id => {
@@ -66,10 +64,4 @@ const PageTransactionsList = props => {
   );
 };
 
-const mapStateToProps = state => ({
-  incomes: state.transactions.incomes,
-  costs: state.transactions.costs,
-  listId: state.transactions.listId,
-});
-
-export default connect(mapStateToProps)(PageTransactionsList);
+export default TransactionsListPage;

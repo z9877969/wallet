@@ -14,13 +14,13 @@ import { getIsAuth, getIsToken } from './redux/auth/authSelector';
 import { logoutSuccess, setIsAuth } from './redux/auth/authAction';
 import { userRefresh } from './redux/auth/authOperation';
 import { getNeedRefresh } from './redux/error/errorSelector';
-import {hasTransactions} from './redux/transactions/transactionsSelector';
+import { hasTransactions } from './redux/transactions/transactionsSelector';
 
 const App = () => {
   const dispatch = useDispatch();
   const { location } = useHistory();
   const isAuth = useSelector(getIsAuth);
-  const isToken = useSelector(getIsToken)
+  const isToken = useSelector(getIsToken);
   const needRefresh = useSelector(getNeedRefresh);
   const hasTrans = useSelector(hasTransactions);
   const [locationBeforeError, setLocationBeforeError] = useState(location);
@@ -28,9 +28,9 @@ const App = () => {
   const handleLogout = () => dispatch(logoutSuccess());
 
   useEffect(() => {
-    isToken && dispatch(setIsAuth(true))
-  }, [])
-  
+    isToken && dispatch(setIsAuth(true));
+  }, []);
+
   useEffect(() => {
     if (isAuth) {
       dispatch(getTransactions());
@@ -55,9 +55,7 @@ const App = () => {
       ) : (
         <>
           <Switch>
-            {needRefresh && (
-              <Redirect to={locationBeforeError} />
-            )}
+            {needRefresh && <Redirect to={locationBeforeError} />}
             <Route
               path="/"
               exact
