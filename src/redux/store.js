@@ -20,22 +20,15 @@ import error from './error/errorReducer';
 import auth from './auth/authReducer';
 import analitics from './analitics/analiticsReducer';
 
-const persistConfigAuth = {
-  key: 'auth',
-  version: 1,
-  whitelist: ['user'],
-  storage,
-};
-
 const persistConfigTransactions = {
-  key: "listId",
+  key: 'listId',
   whitelist: ['listId'],
   storage,
 };
 
 export const store = configureStore({
   reducer: {
-    auth: persistReducer(persistConfigAuth, auth),
+    auth,
     transactions: persistReducer(persistConfigTransactions, transactions),
     categories,
     analitics,
