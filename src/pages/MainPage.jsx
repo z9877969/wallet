@@ -3,10 +3,12 @@ import MainInfo from '../components/MainInfo';
 import Button from '../components/share/Button';
 import Section from '../components/share/Section/Section';
 import Container from '../components/share/Container/Container';
+import costsDb from '../assets/options/costs.json';
+import incomesDb from '../assets/options/incomes.json';
 
 const balance = [{ name: 'Все время', value: '0,00' }];
 
-const MainPage = ({ costsDb, incomesDb }) => {
+const MainPage = () => {
   const history = useHistory();
 
   const handlerOpenCosts = () => {

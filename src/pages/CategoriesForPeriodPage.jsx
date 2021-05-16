@@ -1,5 +1,7 @@
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
+import CreatableSelect from 'react-select/creatable';
 
 import Button from '../components/share/Button';
 import Container from '../components/share/Container/Container';
@@ -8,12 +10,16 @@ import List from '../components/share/List';
 import Section from '../components/share/Section/Section';
 
 import { addTransactionListId } from '../redux/transactions/transactionsAction';
-import { setCatData } from '../redux/analitics/analiticsAction';
-import help from '../utils/helpers';
-import { useEffect } from 'react';
-import moment from 'moment';
-import { getCatsWithTotal } from '../redux/analitics/analiticsSelector';
+import {
+  resetPeriod,
+  setCatData,
+  setPeriod,
+} from '../redux/analitics/analiticsAction';
+import { getCatsWithTotal, getPeriod } from '../redux/analitics/analiticsSelector';
 import { getTransactions } from '../redux/transactions/transactionsSelector';
+import help from '../utils/helpers';
+import options from '../assets/options/selectPeriods';
+// import { handleInputChange } from 'react-select/src/utils';
 
 const CategoriesForPeriodPage = () => {
   const dispatch = useDispatch();
@@ -25,6 +31,9 @@ const CategoriesForPeriodPage = () => {
 
   const data = useSelector(getTransactions)[category] || [];
   const dataRender = useSelector(getCatsWithTotal);
+  const selectPeriod = useSelector(getPeriod);
+
+  const [selectOption, setSelectOption] = useState([options.ru[0]]);
 
   const handleOpenList = id => {
     history.push({
@@ -39,7 +48,19 @@ const CategoriesForPeriodPage = () => {
   const handleGoBack = () => history.push('/');
 
   useEffect(() => {
-    dispatch(setCatData({ data, date: moment().format('YYYY-MM-DD') }));
+    dispatch(setCatData({ data, date: help.dataByPeriod.current }));
+  }, []);
+
+  const handleChange = newValue => {
+    dispatch(setPeriod(newValue.value));
+  };
+
+  useEffect(() => {
+    const { value } = options.ru[0];
+    dispatch(setPeriod(value));
+    return () => {
+      dispatch(resetPeriod());
+    };
   }, []);
 
   return (
@@ -47,6 +68,11 @@ const CategoriesForPeriodPage = () => {
       <Section>
         <Container>
           <Button title="GoBack" cbOnClick={handleGoBack} />
+          <CreatableSelect
+            onChange={handleChange}
+            options={options.ru}
+            defaultValue={options.ru[0]}
+          />
           <List>
             {dataRender.map(({ category, total }) => (
               <Item key={category}>

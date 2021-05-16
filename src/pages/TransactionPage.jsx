@@ -4,8 +4,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import 'react-datepicker/dist/react-datepicker.css';
 import TransactionForm from '../components/TransactionForm/TransactionForm';
 import CategoriesList from '../components/CategoriesList';
-import costsOpts from '../db/costs.json';
-import incomesOpts from '../db/incomes.json';
 import {
   addCosts,
   addIncomes,
@@ -19,13 +17,10 @@ import {
 } from '../redux/categories/categoriesOperation';
 import getFormOpts from '../assets/options/getTransactionFormOpts';
 import categoriesInit from '../assets/options/categoriesInit';
-import { categoriesList as catListIncomes } from '../db/incomes.json';
-import { categoriesList as catListCosts } from '../db/costs.json';
+import { categoriesList as incomesList } from '../assets/options/incomes.json';
+import { categoriesList as costsList } from '../assets/options/costs.json';
 import { resetCategoriesNull } from '../redux/categories/categoriesAction';
 import schema from '../assets/validation/categoriesValidateSchema';
-
-const { categoriesList: costsList } = costsOpts;
-const { categoriesList: incomesList } = incomesOpts;
 
 const TransactionPage = props => {
   const { match, location, history, title } = props;
@@ -39,15 +34,12 @@ const TransactionPage = props => {
     state => state.categories.isNull,
   );
 
-  const [categoryName, setCategoryName] = useState(categoriesInit["category"]);
+  const [categoryName, setCategoryName] = useState(categoriesInit['category']);
 
   const categoriesList = categories[transactionType] || [];
 
   const handleSubmitTransaction = dataForm => {
     const { category, transactionId } = match.params;
-
-    console.log('dataForm :>> ', dataForm);
-
     if (category && transactionId) {
       category === 'incomes' && dispatch(editIncomes(transactionId, dataForm));
       category === 'costs' && dispatch(editCosts(transactionId, dataForm));
@@ -90,14 +82,12 @@ const TransactionPage = props => {
 
   useEffect(() => {
     isCatIncomesNull &&
-      // transactionType === 'incomes' &&
-      catListIncomes.forEach(async ({ name }, i) => {
+      incomesList.forEach(async ({ name }, i) => {
         i === 0 && dispatch(resetCategoriesNull('incomes'));
         await dispatch(addIncomesCat({ name }));
       });
     isCatCostsNull &&
-      // transactionType === 'costs' &&
-      catListCosts.forEach(async ({ name }, i) => {
+      costsList.forEach(async ({ name }, i) => {
         i === 0 && dispatch(resetCategoriesNull('costs'));
         await dispatch(addCostsCat({ name }));
       });

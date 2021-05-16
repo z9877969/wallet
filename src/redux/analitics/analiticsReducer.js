@@ -8,7 +8,7 @@ import {
 import dataOf from '../../utils/helpers/classDataByPeriod';
 
 const iS = {
-  period: 'month',
+  period: '',
   catData: {},
 };
 

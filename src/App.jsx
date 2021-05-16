@@ -7,8 +7,6 @@ import CategoriesForPeriodPage from './pages/CategoriesForPeriodPage';
 import PageTransactionsList from './pages/TransactionsListPage';
 import AuthHeader from './components/AuthHeader/AuthHeader';
 import AuthPage from './pages/AuthPage';
-import costsDb from './db/costs.json';
-import incomesDb from './db/incomes.json';
 import { getTransactions } from './redux/transactions/transactionsOperations';
 import { getIsAuth, getIsToken } from './redux/auth/authSelector';
 import { logoutSuccess, setIsAuth } from './redux/auth/authAction';
@@ -56,21 +54,11 @@ const App = () => {
         <>
           <Switch>
             {needRefresh && <Redirect to={locationBeforeError} />}
-            <Route
-              path="/"
-              exact
-              render={roterProps => (
-                <MainPage
-                  {...roterProps}
-                  costsDb={costsDb}
-                  incomesDb={incomesDb}
-                />
-              )}
-            />
+            <Route path="/" exact component={MainPage} />
             <Route
               exact
               path="/categories/:category/list"
-              render={() => <PageTransactionsList />}
+              component={PageTransactionsList}
             />
             <Route
               path="/:category/:transactionId/edit"
