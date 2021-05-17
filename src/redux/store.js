@@ -26,12 +26,18 @@ const persistConfigTransactions = {
   storage,
 };
 
+const persistConfigAnalitics = {
+  key: 'period',
+  whitelist: ['period'],
+  storage,
+};
+
 export const store = configureStore({
   reducer: {
     auth,
     transactions: persistReducer(persistConfigTransactions, transactions),
     categories,
-    analitics,
+    analitics: persistReducer(persistConfigAnalitics, analitics),
     error,
   },
   middleware: getDefaultMiddleware({

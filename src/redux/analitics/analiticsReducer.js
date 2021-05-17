@@ -6,9 +6,10 @@ import {
   setPeriod,
 } from './analiticsAction';
 import dataOf from '../../utils/helpers/classDataByPeriod';
+import options from '../../assets/options/selectPeriods';
 
 const iS = {
-  period: '',
+  period: options.ru[0].value,
   catData: {},
 };
 

@@ -1,0 +1,38 @@
+.dateContatiner {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .visuallyhidden {
+    position: absolute;
+  
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    border: 0;
+    padding: 0;
+  
+    clip: rect(0 0 0 0);
+    overflow: hidden;
+  }
+  
+  .btnChevron {
+    width: 40px;
+    height: 40px;
+    border: none;
+    background: gray;
+  }
+  
+  .btnChevron svg {
+      width: 100%;
+      height: 100%;
+  }
+  
+  .labelDate {
+      width: calc(100% - 2*40px - 2*15px);
+      background-color: #fcf;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+  }

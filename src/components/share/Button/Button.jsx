@@ -2,6 +2,7 @@ import css from './Button.module.css';
 
 const Button = ({
   title,
+  icon,
   type = 'button',
   cbOnClick,
   className,
@@ -15,7 +16,13 @@ const Button = ({
       }}
       type={type}
     >
-      {title}
+      {title ? (
+        title
+      ) : icon ? (
+        <svg>
+          <use href={icon.path + '#' + icon.id}></use>
+        </svg>
+      ) : null}
     </button>
   );
 };
