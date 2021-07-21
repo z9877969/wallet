@@ -1,13 +1,30 @@
-const Button = ({ title, type = "button", cbOnClick, className }) => {
+import css from './Button.module.css';
+
+const Button = ({
+  title,
+  icon,
+  type = 'button',
+  cbOnClick,
+  className,
+  style,
+  cbArgs = [],
+}) => {
   return (
     <button
-      className={className}
+      className={`${className} ${css.btn}`}
+      style={style ? style : null}
       onClick={() => {
-        cbOnClick && cbOnClick();
+        cbOnClick && cbOnClick(...cbArgs);
       }}
       type={type}
     >
-      {title}
+      {title ? (
+        title
+      ) : icon ? (
+        <svg>
+          <use href={icon.path + '#' + icon.id}></use>
+        </svg>
+      ) : null}
     </button>
   );
 };

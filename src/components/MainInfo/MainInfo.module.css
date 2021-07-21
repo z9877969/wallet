@@ -1,4 +1,17 @@
-.title {
-  font-size: 2rem;
-  color: tomato;
+.infoFrame {
+  background-color: lightgrey;
+  border: 1px solid red;
+}
+
+.currency {
+  text-align: right;
+  margin: 0;
+  margin-bottom: 0.5rem;
+}
+
+.addButton {
+  display: block;
+  width: 30%;
+  height: 40px;
+  margin: 0 auto;
 }

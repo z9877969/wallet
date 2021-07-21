@@ -1,10 +1,5 @@
-import { memo } from 'react';
+import css from './Item.module.css';
 
-const Item = ({ children, onClick }) => (
-  <li>
-    {console.log('object')}
-    {children}
-  </li>
-);
+const Item = ({ children, onClick }) => <li className={`${css.item} ${css.col}`}>{children}</li>;
 
 export default Item;
