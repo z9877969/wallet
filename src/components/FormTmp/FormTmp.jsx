@@ -23,7 +23,7 @@ const FormTmp = ({
             handleChange={el.type !== 'button' ? handleChange : null}
             handleClick={el.type === 'button' ? handleClick : null}
           />
-          {el.isValidate && <Component name={el.name} key={el.name} />}
+          {el.isValidate && <Component name={el.name} />}
         </Fragment>
       ))}
     </Form>

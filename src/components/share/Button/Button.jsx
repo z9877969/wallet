@@ -6,11 +6,13 @@ const Button = ({
   type = 'button',
   cbOnClick,
   className,
+  style,
   cbArgs = [],
 }) => {
   return (
     <button
       className={`${className} ${css.btn}`}
+      style={style ? style : null}
       onClick={() => {
         cbOnClick && cbOnClick(...cbArgs);
       }}

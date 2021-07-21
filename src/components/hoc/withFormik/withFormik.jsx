@@ -17,7 +17,7 @@ const withFormik = WrappedFormComponent => props => {
     validationSchema,
   });
 
-  const optionsToWraped = options.map(({ value, name, ...rest }) => ({
+  const optionsWrapedInputs = options.map(({ value, name, ...rest }) => ({
     ...rest,
     name,
     value: formik.values[name],
@@ -28,7 +28,7 @@ const withFormik = WrappedFormComponent => props => {
       onSubmit={formik.handleSubmit}
       handleChange={formik.handleChange.bind(formik)}
       handleClick={handleClick}
-      options={optionsToWraped}
+      options={optionsWrapedInputs}
       component={({ name }) => <ErrorComponent name={name} formik={formik} />}
       {...rest}
     />

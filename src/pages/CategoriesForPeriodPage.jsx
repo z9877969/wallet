@@ -25,8 +25,11 @@ import help from '../utils/helpers';
 import options from '../assets/options/selectPeriods';
 import iconsPath from '../assets/icons/sprite.svg';
 
+const { current, getDateOfPeriodStr } = help.dataByPeriod;
+
 const icons = {
   goBack: { path: iconsPath, id: 'icon-arrow-left2' },
+  showMore: { path: iconsPath, id: 'icon-navigation-more' },
 };
 
 const CategoriesForPeriodPage = () => {
@@ -38,11 +41,8 @@ const CategoriesForPeriodPage = () => {
   const { category } = match.params;
 
   const data = useSelector(getTransactions)[category] || [];
-  const dataRender = useSelector(getCatsWithTotal);
+  const dataToRender = useSelector(getCatsWithTotal);
   const selectPeriod = useSelector(getPeriod);
-
-  // const [date, setDate] = useState(help.dataByPeriod.current);
-  const [date, setDate] = useState(new Date());
 
   const handleOpenList = id => {
     history.push({
@@ -56,23 +56,26 @@ const CategoriesForPeriodPage = () => {
 
   const handleGoBack = () => history.push('/');
 
-  useEffect(() => {
-    dispatch(setCatData({ data, date: help.dataByPeriod.current }));
-  }, []);
-
-  const handleChange = newValue => {
+  const handleChangePeriod = newValue => {
     dispatch(setPeriod(newValue.value));
   };
 
-  const handleChangeDate = date => setDate(date);
+  // const categoriesOfTransactions = dataToRender
+
+  
 
   useEffect(() => {
     const { value } = options.ru[0];
+    dispatch(setCatData({ data, date: current }));
     dispatch(setPeriod(value));
     return () => {
       dispatch(resetPeriod());
     };
   }, []);
+
+  useEffect(() => {
+    getDateOfPeriodStr({ date: current, period: selectPeriod });
+  }, [selectPeriod]);
 
   return (
     <>
@@ -80,21 +83,20 @@ const CategoriesForPeriodPage = () => {
         <Container>
           <Button icon={icons.goBack} cbOnClick={handleGoBack} />
           <CreatableSelect
-            onChange={handleChange}
+            onChange={handleChangePeriod}
             options={options.ru}
             defaultValue={selectPeriod}
           />
-          <DatesPaginator
-            title={'May 2021'}
-            date={date}
-            handleChangeDate={handleChangeDate}
-          />
+          <DatesPaginator />
           <List>
-            {dataRender.map(({ category, total }) => (
+            {dataToRender.map(({ category, total }) => (
               <Item key={category}>
-                <span>{category}</span> <span>{total}</span>
+                <p>
+                  <span>{category}</span>
+                  <span>{total}</span>
+                </p>
                 <Button
-                  title="show list"
+                  title="..."
                   cbOnClick={handleOpenList}
                   cbArgs={[category]}
                 />

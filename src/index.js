@@ -8,6 +8,8 @@ import App from './App';
 import './index.css';
 // import { signUp } from './services/firebaseApi';
 
+// import './utils/funcSpeedTest';
+
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
